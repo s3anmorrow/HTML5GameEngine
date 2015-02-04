@@ -80,10 +80,9 @@ var Enemy = function() {
         stage.addChild(sprite);
 
         // collision detection test setup
-        sprite.y = 500;
-        sprite.x = 225;
+        sprite.x = 265;
+        sprite.y = 10;
         moving = MovingDirection.STOPPED;
-
     };
 
     this.stopMe = function() {
