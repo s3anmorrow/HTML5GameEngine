@@ -43,6 +43,10 @@ function monitorCollisions() {
 
         console.log("BULLET HIT!");
 
+        bullet.killMe();
+        enemy.killMe();
+
+
     }
 
     // only monitor if player is alive

@@ -3,6 +3,7 @@ var Bullet = function() {
     // local references to global variables
     var stage = window.stage;
     var assetmanager = window.asserManager;
+    //var player = window.player;
 
     // custom events
     var eventBulletKilled = new createjs.Event("onBulletKilled", true);
@@ -13,15 +14,12 @@ var Bullet = function() {
 	this.poolIndex = -1;
 
     // private property variables
-    var speed = 4;
-    var moving = MovingDirection.STOPPED;
+    var speed = 6;
 
     // get sprite and setup
     var sprite = assetManager.getSprite("GameSprites");
     sprite.regX = sprite.getBounds().width / 2;
     sprite.regY = sprite.getBounds().height / 2;
-    sprite.x = 300;
-    sprite.y = 500;
     // ?????????????????????????????? this will need to be changed
     sprite.gotoAndStop("bullet");
     // ???????????????????????????????????????????????????????????
@@ -36,12 +34,17 @@ var Bullet = function() {
 
     // --------------------------------------------------- public methods
     this.startMe = function() {
+        // ????????????????????????????????
+        //sprite.x = player.x;
+        //sprite.y = player.y;
         stage.addChild(sprite);
     };
 
     this.killMe = function() {
         sprite.stop();
-        moving = MovingDirection.STOPPED;
+        stage.removeChild(sprite);
+        objectPool.dispose(this);
+        sprite.dispatchEvent(eventBulletKilled);
     };
 
     this.updateMe = function() {

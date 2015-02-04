@@ -3,6 +3,7 @@ var Enemy = function() {
     // local references to global variables
     var stage = window.stage;
     var assetmanager = window.asserManager;
+    var me = this;
 
     // custom events
     var eventEnemyKilled = new createjs.Event("onEnemyKilled", true);
@@ -136,6 +137,8 @@ var Enemy = function() {
         sprite.removeEventListener("animationend", onKilled);
         //stage.removeChild(sprite);
         sprite.dispatchEvent(eventEnemyKilled);
+        // return object to pool
+        objectPool.dispose(me);
     }
 
 
