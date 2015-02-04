@@ -105,6 +105,7 @@ function onReady(e) {
     player = objectPool.getPlayer();
 
     enemy = objectPool.getEnemy();
+    enemy.setSpeed(4);
     enemy.setAngleOfTravel(45,135);
     enemy.setRangeOfTravel(100);
     enemy.startMe();

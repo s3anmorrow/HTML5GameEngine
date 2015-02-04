@@ -15,7 +15,7 @@ var Enemy = function() {
 
     // private property variables
     var moving = MovingDirection.STOPPED;
-    var speed = 4;
+    var speed = 2;
     var angleOfRightTravel = 45;
     var angleOfLeftTravel = 135;
     var rangeOfTravel = 100;
@@ -26,12 +26,14 @@ var Enemy = function() {
 
     // get sprite and setup
     var sprite = assetManager.getSprite("GameSprites");
-    sprite.x = 300;
+    sprite.x = 50;
     sprite.y = 30;
     // ?????????????????????????????? this will need to be changed
     sprite.gotoAndStop("bugAlive");
     // ???????????????????????????????????????????????????????????
 
+    var stageLeftBound = sprite.getBounds().width;
+    var stageRightBound = stage.canvas.width - (sprite.getBounds().width * 2);
 
     // -------------------------------------------------- private methods
     function radianMe(degrees) {
@@ -47,6 +49,11 @@ var Enemy = function() {
     }
 
     // --------------------------------------------------- get/set methods
+    this.setLocation = function(x,y) {
+        sprite.x = x;
+        sprite.y = y;
+    };
+
     this.setSpeed = function(value) {
         speed = value;
     };
@@ -70,6 +77,11 @@ var Enemy = function() {
         startX = sprite.x;
         calculateDisplace(angleOfRightTravel);
         sprite.play();
+
+        // randomly set behaviour properties
+
+
+
         moving = MovingDirection.RIGHT;
         stage.addChild(sprite);
     };
@@ -85,8 +97,8 @@ var Enemy = function() {
             sprite.x = sprite.x + xDisplace;
             sprite.y = sprite.y + yDisplace;
 
-            // do I need to cris-cross the other direction?
-            if (Math.abs(startX - sprite.x) > rangeOfTravel) {
+            // change to other direction - done if used up horizontal range or hitting edge of stage
+            if ((Math.abs(startX - sprite.x) > rangeOfTravel) || (sprite.x <= stageLeftBound) || (sprite.x >= stageRightBound)) {
                 if (moving === MovingDirection.RIGHT) {
                     calculateDisplace(angleOfLeftTravel);
                     moving = MovingDirection.LEFT;

@@ -10,14 +10,17 @@ var ObjectPool = function() {
 	// starting constant maximums of the game elements (virusMax can be extended by Object pool if needed)
 	var PLAYER_MAX = 1;
     var ENEMY_MAX = 20;
+    var BULLET_MAX = 20;
 
 	// object pool arrays
 	var playerPool = [];
 	var enemyPool = [];
+    var bulletPool = [];
 
 	// direct public access to pools
 	this.playerPool = playerPool;
 	this.enemyPool = enemyPool;
+    this.bulletPool = bulletPool;
 
 	// other
 	var index = 0;
@@ -33,6 +36,11 @@ var ObjectPool = function() {
 				return object;
 			}
 		}
+
+        // no more objects left - construct a new object (emergency!)
+        // ???????????????????????????????
+
+
 		return null;
 	}
 
@@ -55,6 +63,7 @@ var ObjectPool = function() {
 		// populate arrays to create pool of game objects
 		constructObjects(playerPool, PLAYER_MAX, Player);
 		constructObjects(enemyPool, ENEMY_MAX, Enemy);
+        constructObjects(bulletPool, BULLET_MAX, Bullet);
 	}
 
 	this.getPlayer = function() {
@@ -65,6 +74,10 @@ var ObjectPool = function() {
 		return getObject(enemyPool, ENEMY_MAX);
     }
 
+	this.getBullet = function() {
+		return getObject(bulletPool, BULLET_MAX);
+    }
+
     this.dispose = function(o) {
 		// which type of game object are we disposing?
 		if (o.type == "Player") {
@@ -72,6 +85,9 @@ var ObjectPool = function() {
 			//usedList[o.usedIndex] = null;
 		} else if (o.type == "Enemy") {
 			enemyPool[o.poolIndex].used = false;
+			//usedList[o.usedIndex] = null;
+		} else if (o.type == "Bullet") {
+			bulletPool[o.poolIndex].used = false;
 			//usedList[o.usedIndex] = null;
 		}
 
