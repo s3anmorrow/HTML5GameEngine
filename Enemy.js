@@ -4,9 +4,18 @@ var Enemy = function() {
     var stage = window.stage;
     var assetmanager = window.asserManager;
 
+    // custom events
+    var eventEnemyKilled = new createjs.Event("onEnemyKilled", true);
+    var eventEnemySurvived = new createjs.Event("onEnemySurvived", true);
+
+    // public properties for objectPool use
+    this.type = "Enemy";
+	this.used = false;
+	this.poolIndex = -1;
+
     // private property variables
     var moving = MovingDirection.STOPPED;
-    var speed = 2;
+    var speed = 4;
     var angleOfRightTravel = 45;
     var angleOfLeftTravel = 135;
     var rangeOfTravel = 100;
@@ -16,14 +25,13 @@ var Enemy = function() {
     var yDisplace = -1;
 
     // get sprite and setup
-    sprite = assetManager.getSprite("GameSprites");
-    sprite.scaleX = 1;
+    var sprite = assetManager.getSprite("GameSprites");
     sprite.x = 300;
     sprite.y = 30;
     // ?????????????????????????????? this will need to be changed
     sprite.gotoAndStop("bugAlive");
     // ???????????????????????????????????????????????????????????
-    stage.addChild(sprite);
+
 
     // -------------------------------------------------- private methods
     function radianMe(degrees) {
@@ -63,6 +71,7 @@ var Enemy = function() {
         calculateDisplace(angleOfRightTravel);
         sprite.play();
         moving = MovingDirection.RIGHT;
+        stage.addChild(sprite);
     };
 
     this.stopMe = function() {
@@ -85,6 +94,12 @@ var Enemy = function() {
                     calculateDisplace(angleOfRightTravel);
                     moving = MovingDirection.RIGHT;
                 }
+            }
+
+            // is the enemy off the bottom of the stage?
+            if (sprite.y > stage.canvas.height) {
+                this.stopMe();
+                sprite.dispatchEvent(eventEnemySurvived);
             }
 
         }

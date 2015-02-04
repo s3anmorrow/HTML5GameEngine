@@ -6,12 +6,20 @@ var Player = function(){
     var stage = window.stage;
     var assetmanager = window.asserManager;
 
+    // custom events
+    var eventPlayerKilled = new createjs.Event("onPlayerKilled", true);
+
+    // public properties for objectPool use
+    this.type = "Player";
+	this.used = false;
+	this.poolIndex = -1;
+
     // private property variables
     var speed = 4;
     var moving = MovingDirection.STOPPED;
 
     // get sprite and setup
-    sprite = assetManager.getSprite("GameSprites");
+    var sprite = assetManager.getSprite("GameSprites");
     sprite.scaleX = 1;
     sprite.regX = sprite.getBounds().width / 2;
     sprite.regY = sprite.getBounds().height / 2;
