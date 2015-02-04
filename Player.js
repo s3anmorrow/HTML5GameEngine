@@ -17,6 +17,7 @@ var Player = function(){
     // private property variables
     var speed = 4;
     var moving = MovingDirection.STOPPED;
+    var alive = false;
 
     // get sprite and setup
     var sprite = assetManager.getSprite("GameSprites");
@@ -28,7 +29,6 @@ var Player = function(){
     // ?????????????????????????????? this will need to be changed
     sprite.gotoAndStop("snakeAlive");
     // ???????????????????????????????????????????????????????????
-    stage.addChild(sprite);
 
     // determine left and right stage bounds
     var stageLeftBound = sprite.getBounds().width / 2;
@@ -39,7 +39,20 @@ var Player = function(){
         return moving;
     };
 
+    this.getSprite = function() {
+        return sprite;
+    };
+
+    this.getAlive = function() {
+        return alive;
+    };
+
     // --------------------------------------------------- public methods
+    this.startMe = function() {
+        alive = true;
+        stage.addChild(sprite);
+    };
+
     this.moveLeft = function() {
         sprite.play();
         moving = MovingDirection.LEFT;
@@ -55,29 +68,47 @@ var Player = function(){
         moving = MovingDirection.STOPPED;
     };
 
+    this.killMe = function() {
+        alive = false;
+        this.stopMe();
+        sprite.gotoAndPlay("snakeDead");
+        sprite.addEventListener("animationend", onKilled);
+    };
+
     this.updateMe = function() {
-        if (moving === MovingDirection.LEFT) {
-            // moving left
-            sprite.scaleX = 1;
-            sprite.x = sprite.x - speed;
-            if (sprite.x < stageLeftBound) {
-                sprite.x = stageLeftBound;
+        if (alive) {
+            if (moving === MovingDirection.LEFT) {
+                // moving left
+                sprite.scaleX = 1;
+                sprite.x = sprite.x - speed;
+                if (sprite.x < stageLeftBound) {
+                    sprite.x = stageLeftBound;
+                }
+            } else if (moving === MovingDirection.RIGHT) {
+                // moving right
+                sprite.scaleX = -1;
+                sprite.x = sprite.x + speed;
+                if (sprite.x > stageRightBound) {
+                    sprite.x = stageRightBound;
+                }
+            } else {
+
+                // ?????????????????????????????
+                // set animation to idle sequence
+
+
             }
-        } else if (moving === MovingDirection.RIGHT) {
-            // moving right
-            sprite.scaleX = -1;
-            sprite.x = sprite.x + speed;
-            if (sprite.x > stageRightBound) {
-                sprite.x = stageRightBound;
-            }
-        } else {
-
-            // ?????????????????????????????
-            // set animation to idle sequence
-
-
         }
     };
+
+    // -------------------------------------------------- event handlers
+    function onKilled(e) {
+        sprite.stop();
+        sprite.removeEventListener("animationend", onKilled);
+        //stage.removeChild(sprite);
+        sprite.dispatchEvent(eventPlayerKilled);
+    }
+
 };
 
 var MovingDirection = {

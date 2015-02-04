@@ -23,6 +23,9 @@ var enemy = null;
 
 // ------------------------------------------------------------ private methods
 function monitorKeys() {
+
+    if (!player.getAlive()) return;
+
     if (leftKey) {
         player.moveLeft();
     } else if (rightKey) {
@@ -30,6 +33,24 @@ function monitorKeys() {
     } else {
         player.stopMe();
     }
+}
+
+function monitorCollisions() {
+
+    if (!player.getAlive()) return;
+
+    // check collisions between enemies and player
+    if (ndgmr.checkPixelCollision(enemy.getSprite(), player.getSprite(), 1) !== false) {
+
+        console.log("COLLISION!");
+
+        player.killMe();
+        enemy.killMe();
+
+    }
+
+
+
 }
 
 function randomMe(low, high) {
@@ -103,9 +124,11 @@ function onReady(e) {
 
     // ????????????????????????? testing
     player = objectPool.getPlayer();
+    player.startMe();
 
     enemy = objectPool.getEnemy();
     enemy.startMe();
+
 
 
 
@@ -115,16 +138,23 @@ function onReady(e) {
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("keyup", onKeyUp);
     // game listeners
-    stage.addEventListener("onEnemySurvived", onEnemySurvived);
+    stage.addEventListener("onEnemySurvived", onGameEvent, true);
 
     // startup the ticker
     createjs.Ticker.setFPS(frameRate);
     createjs.Ticker.addEventListener("tick", onTick);
 }
 
-function onEnemySurvived(e) {
+function onGameEvent(e) {
 
-    console.log("oh no - enemy survived!");
+    switch (e.type) {
+        case "onEnemySurvived":
+            console.log("oh no - enemy survived!");
+            break;
+
+
+
+    }
 
 }
 
@@ -137,6 +167,8 @@ function onTick(e) {
     monitorKeys();
     player.updateMe();
     enemy.updateMe();
+
+    monitorCollisions();
 
 
 

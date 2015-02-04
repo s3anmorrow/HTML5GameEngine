@@ -55,9 +55,12 @@ var Enemy = function() {
         return moving;
     };
 
+    this.getSprite = function() {
+        return sprite;
+    };
+
     // --------------------------------------------------- public methods
     this.startMe = function() {
-
         // randomly set behaviour properties
         sprite.y = -sprite.getBounds().height;
         sprite.x = randomMe(stageLeftBound, stageRightBound);
@@ -68,20 +71,34 @@ var Enemy = function() {
         //speed = randomMe(2,4);
         speed = 4;
 
-
         // store where we start from
         startX = sprite.x;
         calculateDisplace(angleOfRightTravel);
         sprite.play();
 
-
         moving = MovingDirection.RIGHT;
         stage.addChild(sprite);
+
+        // collision detection test setup
+        sprite.y = 500;
+        sprite.x = 225;
+        moving = MovingDirection.STOPPED;
+
     };
 
     this.stopMe = function() {
         sprite.stop();
         moving = MovingDirection.STOPPED;
+    };
+
+    this.killMe = function() {
+
+        console.log("killing enemy");
+
+        this.stopMe();
+        sprite.gotoAndPlay("bugDead");
+        sprite.addEventListener("animationend", onKilled);
+
     };
 
     this.updateMe = function() {
@@ -113,6 +130,14 @@ var Enemy = function() {
 
         }
     };
+
+    // -------------------------------------------------- event handlers
+    function onKilled(e) {
+        sprite.stop();
+        sprite.removeEventListener("animationend", onKilled);
+        //stage.removeChild(sprite);
+        sprite.dispatchEvent(eventEnemyKilled);
+    }
 
 
 
