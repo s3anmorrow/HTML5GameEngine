@@ -23,6 +23,8 @@ var Enemy = function() {
     var startX = 0;
     var xDisplace = -1;
     var yDisplace = -1;
+    var stageWidth = stage.canvas.width;
+    var stageHeight = stage.canvas.height;
 
     // get sprite and setup
     var sprite = assetManager.getSprite("GameSprites");
@@ -33,7 +35,7 @@ var Enemy = function() {
     // ???????????????????????????????????????????????????????????
 
     var stageLeftBound = sprite.getBounds().width;
-    var stageRightBound = stage.canvas.width - (sprite.getBounds().width * 2);
+    var stageRightBound = stageWidth - (sprite.getBounds().width * 2);
 
     // -------------------------------------------------- private methods
     function radianMe(degrees) {
@@ -49,37 +51,28 @@ var Enemy = function() {
     }
 
     // --------------------------------------------------- get/set methods
-    this.setLocation = function(x,y) {
-        sprite.x = x;
-        sprite.y = y;
-    };
-
-    this.setSpeed = function(value) {
-        speed = value;
-    };
-
-    this.setAngleOfTravel = function(value1, value2) {
-        angleOfRightTravel = value1;
-        angleOfLeftTravel = value2;
-    };
-
-    this.setRangeOfTravel = function(value) {
-        rangeOfTravel = value;
-    };
-
     this.getMoving = function(){
         return moving;
     };
 
     // --------------------------------------------------- public methods
     this.startMe = function() {
+
+        // randomly set behaviour properties
+        sprite.y = -sprite.getBounds().height;
+        sprite.x = randomMe(stageLeftBound, stageRightBound);
+        angleOfRightTravel = randomMe(20, 80);
+        angleOfLeftTravel = randomMe(100, 160);
+
+        rangeOfTravel = sprite.getBounds().width * 2;
+        //speed = randomMe(2,4);
+        speed = 4;
+
+
         // store where we start from
         startX = sprite.x;
         calculateDisplace(angleOfRightTravel);
         sprite.play();
-
-        // randomly set behaviour properties
-
 
 
         moving = MovingDirection.RIGHT;
@@ -93,12 +86,12 @@ var Enemy = function() {
 
     this.updateMe = function() {
         if (moving) {
-            // move sprite
-            sprite.x = sprite.x + xDisplace;
-            sprite.y = sprite.y + yDisplace;
+
+            // where am I going on the xAxis for the next move?
+            var nextX = sprite.x + xDisplace;
 
             // change to other direction - done if used up horizontal range or hitting edge of stage
-            if ((Math.abs(startX - sprite.x) > rangeOfTravel) || (sprite.x <= stageLeftBound) || (sprite.x >= stageRightBound)) {
+            if ((Math.abs(startX - nextX) > rangeOfTravel) || (nextX <= stageLeftBound) || (nextX >= stageRightBound)) {
                 if (moving === MovingDirection.RIGHT) {
                     calculateDisplace(angleOfLeftTravel);
                     moving = MovingDirection.LEFT;
@@ -108,8 +101,12 @@ var Enemy = function() {
                 }
             }
 
+            // move sprite
+            sprite.x = sprite.x + xDisplace;
+            sprite.y = sprite.y + yDisplace;
+
             // is the enemy off the bottom of the stage?
-            if (sprite.y > stage.canvas.height) {
+            if (sprite.y > stageHeight) {
                 this.stopMe();
                 sprite.dispatchEvent(eventEnemySurvived);
             }
