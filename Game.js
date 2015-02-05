@@ -183,6 +183,9 @@ function onReady(e) {
 
 
 
+    // setup event listener for when browser loses focus
+    window.addEventListener("blur", onPause);
+    window.addEventListener("focus", onResume);
 
     // setup event listeners for keyboard keys
     document.addEventListener("keydown", onKeyDown);
@@ -199,6 +202,16 @@ function onDropEnemy(e) {
     var enemy = objectPool.getEnemy();
     enemy.startMe();
 
+}
+
+function onPause(e) {
+    window.clearInterval(enemyTimer);
+    createjs.Ticker.removeEventListener("tick", onTick);
+}
+
+function onResume(e) {
+    enemyTimer = window.setInterval(onDropEnemy, dropInterval);
+    createjs.Ticker.addEventListener("tick", onTick);
 }
 
 function onGameEvent(e) {
