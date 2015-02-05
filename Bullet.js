@@ -8,7 +8,7 @@ var Bullet = function() {
     var eventBulletKilled = new createjs.Event("onBulletKilled", true);
 
     // private property variables
-    var speed = 4;
+    var speed = 6;
     var alive = false;
 
     // get sprite and setup

@@ -9,20 +9,19 @@ var canvas = null;
 // key booleans
 var leftKey = false;
 var rightKey = false;
-// frame rate of game
-var frameRate = 30;
+// timer for dropping enemies
+var enemyTimer = null;
+var dropInterval = 1000;
+// containers to add game objects to for proper layering
+var enemyContainer = null;
+var bulletContainer = null;
+// list of all used game objects for updating
+var updateList = null;
 
 // game objects
 var assetManager = null;
 var background = null;
 var player = null;
-var updateList = null;
-
-var enemyTimer = null;
-var dropInterval = 1000;
-
-var enemyContainer = null;
-var bulletContainer = null;
 
 // ------------------------------------------------------------ private methods
 function monitorKeys() {
@@ -192,7 +191,7 @@ function onReady(e) {
     stage.addEventListener("onEnemySurvived", onGameEvent, true);
 
     // startup the ticker
-    createjs.Ticker.setFPS(frameRate);
+    createjs.Ticker.setFPS(GameSettings.frameRate);
     createjs.Ticker.addEventListener("tick", onTick);
 }
 
