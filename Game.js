@@ -10,7 +10,7 @@ var canvas = null;
 var leftKey = false;
 var rightKey = false;
 // frame rate of game
-var frameRate = 24;
+var frameRate = 30;
 
 // game objects
 var assetManager = null;
@@ -21,13 +21,11 @@ var updateList = null;
 var enemyTimer = null;
 var dropInterval = 1000;
 
-// ????????????????????????????? remove this
-//var enemyTemp = null;
-// ?????????????????????????????????????????
+var enemyContainer = null;
+var bulletContainer = null;
 
 // ------------------------------------------------------------ private methods
 function monitorKeys() {
-
     if (!player.getAlive()) return;
 
     if (leftKey) {
@@ -63,14 +61,12 @@ function monitorCollisions() {
         if (bulletPool[n].getAlive()) {
             var bullet = bulletPool[n];
             for (var i=0; i<enemyPoolLength; i++) {
-                if (enemyPool[n].getAlive()) {
+                if (enemyPool[i].getAlive()) {
                     var enemy = enemyPool[i];
                     if (ndgmr.checkPixelCollision(enemy.getSprite(), bullet.getSprite(), 1) !== false) {
-
-                        console.log("BULLET HIT!");
-
                         bullet.killMe();
                         enemy.killMe();
+                        break;
                     }
                 }
             }
@@ -174,11 +170,11 @@ function onReady(e) {
     // timer to drop enemies into game
     enemyTimer = window.setInterval(onDropEnemy, dropInterval);
 
-    // construct game objects
-
-
-
-    // ????????????????????????? testing
+    // construct player objects
+    enemyContainer = new createjs.Container();
+    stage.addChild(enemyContainer);
+    bulletContainer = new createjs.Container();
+    stage.addChild(bulletContainer);
     player = objectPool.getPlayer();
     player.startMe();
 
@@ -224,7 +220,7 @@ function onTick(e) {
     document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
 
     monitorKeys();
-    monitorCollisions();
+    if ((createjs.Ticker.getTicks() % 2) === 0) monitorCollisions();
     updateGameObjects();
 
     // update the stage!

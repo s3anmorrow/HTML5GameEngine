@@ -60,6 +60,8 @@ var Enemy = function() {
     // --------------------------------------------------- public methods
     this.startMe = function() {
         alive = true;
+        sprite.gotoAndPlay("bugAlive");
+
         // randomly set behaviour properties
         sprite.y = -sprite.getBounds().height;
         sprite.x = randomMe(stageLeftBound, stageRightBound);
@@ -67,17 +69,14 @@ var Enemy = function() {
         angleOfLeftTravel = randomMe(100, 160);
 
         rangeOfTravel = sprite.getBounds().width * 2;
-        //speed = randomMe(2,4);
-        speed = 4;
-        sprite.gotoAndStop("bugAlive");
+        speed = randomMe(2,4);
 
         // store where we start from
         startX = sprite.x;
         calculateDisplace(angleOfRightTravel);
-        sprite.play();
 
         moving = MovingDirection.RIGHT;
-        stage.addChild(sprite);
+        enemyContainer.addChild(sprite);
 
         /*
         // collision detection test setup
@@ -137,6 +136,7 @@ var Enemy = function() {
     // -------------------------------------------------- event handlers
     function onKilled(e) {
         sprite.stop();
+        enemyContainer.removeChild(sprite);
         sprite.removeEventListener("animationend", onKilled);
         //stage.removeChild(sprite);
         sprite.dispatchEvent(eventEnemyKilled);

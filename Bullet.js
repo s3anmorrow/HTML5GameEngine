@@ -8,7 +8,7 @@ var Bullet = function() {
     var eventBulletKilled = new createjs.Event("onBulletKilled", true);
 
     // private property variables
-    var speed = 6;
+    var speed = 4;
     var alive = false;
 
     // get sprite and setup
@@ -34,13 +34,13 @@ var Bullet = function() {
         alive = true;
         sprite.x = x;
         sprite.y = y;
-        stage.addChild(sprite);
+        bulletContainer.addChild(sprite);
     };
 
     this.killMe = function() {
         alive = false;
         sprite.stop();
-        stage.removeChild(sprite);
+        bulletContainer.removeChild(sprite);
         objectPool.dispose(this);
         sprite.dispatchEvent(eventBulletKilled);
     };
