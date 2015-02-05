@@ -51,6 +51,12 @@ var Player = function(){
         stage.addChild(sprite);
     };
 
+    this.stopMe = function() {
+        sprite.stop();
+        moving = MovingDirection.STOPPED;
+        //stage.removeChild(sprite);
+    };
+
     this.moveLeft = function() {
         sprite.play();
         moving = MovingDirection.LEFT;
@@ -59,11 +65,6 @@ var Player = function(){
     this.moveRight = function() {
         sprite.play();
         moving = MovingDirection.RIGHT;
-    };
-
-    this.stopMe = function() {
-        sprite.stop();
-        moving = MovingDirection.STOPPED;
     };
 
     this.killMe = function() {

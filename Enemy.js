@@ -125,8 +125,10 @@ var Enemy = function() {
 
             // is the enemy off the bottom of the stage?
             if (sprite.y > stageHeight) {
+                alive = false;
                 this.stopMe();
                 sprite.dispatchEvent(eventEnemySurvived);
+                enemyContainer.removeChild(sprite);
                 objectPool.dispose(me);
             }
 
@@ -136,10 +138,10 @@ var Enemy = function() {
     // -------------------------------------------------- event handlers
     function onKilled(e) {
         sprite.stop();
-        enemyContainer.removeChild(sprite);
         sprite.removeEventListener("animationend", onKilled);
         //stage.removeChild(sprite);
         sprite.dispatchEvent(eventEnemyKilled);
+        enemyContainer.removeChild(sprite);
         // return object to pool
         objectPool.dispose(me);
     }

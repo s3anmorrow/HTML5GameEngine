@@ -1,4 +1,6 @@
-// HTML5 Game Engine
+// Game Engine
+// Implemented in HTML5 with CreateJS
+// Nova Scotia Community College : Truro Campus
 // Sean Morrow
 // Feb 2 2015
 
@@ -17,16 +19,22 @@ var enemyContainer = null;
 var bulletContainer = null;
 // list of all used game objects for updating
 var updateList = null;
+// the number of bullets active at any moment
+var bulletCount = 0;
+// are we playing yet?
+var playing = false;
 
 // game objects
 var assetManager = null;
 var background = null;
 var player = null;
+var introScreen = null;
+var gameScreen = null;
+var overScreen = null;
 
 // ------------------------------------------------------------ private methods
 function monitorKeys() {
     if (!player.getAlive()) return;
-
     if (leftKey) {
         player.moveLeft();
     } else if (rightKey) {
@@ -37,15 +45,13 @@ function monitorKeys() {
 }
 
 function fireKey() {
-
-    console.log("fire!");
+    // only if I haven't exceeded max bullets allowed
+    if (bulletCount >= GameSettings.bulletMax) return;
 
     var bullet = objectPool.getBullet();
     var x = player.getSprite().x;
     var y = player.getSprite().y;
     bullet.startMe(x, y);
-
-
 }
 
 function monitorCollisions() {
@@ -55,10 +61,12 @@ function monitorCollisions() {
     var bulletPoolLength = bulletPool.length;
     var enemyPoolLength = enemyPool.length;
 
+    bulletCount = 0;
     // check collisions between all bullets with each enemy
     for (var n=0; n<bulletPoolLength; n++) {
         if (bulletPool[n].getAlive()) {
             var bullet = bulletPool[n];
+            bulletCount++;
             for (var i=0; i<enemyPoolLength; i++) {
                 if (enemyPool[i].getAlive()) {
                     var enemy = enemyPool[i];
@@ -91,9 +99,6 @@ function updateGameObjects() {
     // loop through all used objects of ObjectPool and update them all in turn
 	var length = updateList.length;
 	var target = null;
-
-    //console.log("updating: " + length);
-
 	for (var n=0; n<length; n++) {
 		target = updateList[n];
 		if (target !== null) target.updateMe();
@@ -117,13 +122,6 @@ function onInit() {
 	// create stage object
     stage = new createjs.Stage(canvas);
 
-    // setup solid color background
-    background = new createjs.Shape();
-	background.graphics.beginFill("#6699CC").drawRect(0,0,600,600);
-	background.cache(0,0,600,600);
-	stage.addChild(background);
-	stage.update();
-
     // construct preloader object to load spritesheet and sound assets
     assetManager = new AssetManager();
     stage.addEventListener("onAssetLoaded", onProgress);
@@ -134,6 +132,75 @@ function onInit() {
 
 function onProgress(e) {
     console.log("progress: " + assetManager.getProgress());
+}
+
+function onReady(e) {
+    console.log(">> setup");
+    // kill event listener
+	stage.removeEventListener("onAssetLoaded", onProgress);
+    stage.removeEventListener("onAllAssetsLoaded", onReady);
+
+    // construct object pool
+	objectPool = new ObjectPool();
+	objectPool.init();
+    updateList = objectPool.getUpdateList();
+
+    // construct screen objects
+    gameScreen = assetManager.getSprite("GameSprites");
+    gameScreen.gotoAndStop("gameScreen");
+    overScreen = assetManager.getSprite("GameSprites");
+    overScreen.gotoAndStop("overScreen");
+    introScreen = assetManager.getSprite("GameSprites");
+    introScreen.gotoAndStop("introScreen");
+    introScreen.addEventListener("click",onStartGame);
+    stage.addChild(introScreen);
+
+    // construct containers for game objects
+    enemyContainer = new createjs.Container();
+    stage.addChild(enemyContainer);
+    bulletContainer = new createjs.Container();
+    stage.addChild(bulletContainer);
+
+    // setup event listener for when browser loses focus
+    window.addEventListener("blur", onPause);
+    window.addEventListener("focus", onResume);
+
+    // startup the ticker
+    createjs.Ticker.setFPS(GameSettings.frameRate);
+    createjs.Ticker.addEventListener("tick", onTick);
+}
+
+function onStartGame(e) {
+    playing = true;
+    // initialize current state of keys
+    leftKey = false;
+    rightKey = false;
+    spaceKey = false;
+
+    // construct player object
+    player = objectPool.getPlayer();
+    player.startMe();
+
+    // start timer to drop enemies into game
+    enemyTimer = window.setInterval(onDropEnemy, dropInterval);
+
+    // setup event listeners for keyboard keys
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
+    // game listeners
+    stage.addEventListener("onEnemySurvived", onGameEvent, true);
+    stage.addEventListener("onEnemyKilled", onGameEvent, true);
+    stage.addEventListener("onPlayerKilled", onGameEvent, true);
+
+    // remove introScreen and add gameScreen
+    stage.removeChild(introScreen);
+    stage.addChildAt(gameScreen,0);
+}
+
+function onStopGame(e) {
+    playing = false;
+
+
 }
 
 function onKeyDown(e) {
@@ -149,61 +216,6 @@ function onKeyUp(e) {
     else if (e.keyCode == 32) fireKey();
 }
 
-function onReady(e) {
-    console.log(">> setup");
-    // kill event listener
-	stage.removeEventListener("onAssetLoaded", onProgress);
-    stage.removeEventListener("onAllAssetsLoaded", onReady);
-
-    // current state of keys
-    leftKey = false;
-    rightKey = false;
-    spaceKey = false;
-
-
-    // construct object pool
-	objectPool = new ObjectPool();
-	objectPool.init();
-    updateList = objectPool.getUpdateList();
-
-    // timer to drop enemies into game
-    enemyTimer = window.setInterval(onDropEnemy, dropInterval);
-
-    // construct player objects
-    enemyContainer = new createjs.Container();
-    stage.addChild(enemyContainer);
-    bulletContainer = new createjs.Container();
-    stage.addChild(bulletContainer);
-    player = objectPool.getPlayer();
-    player.startMe();
-
-
-
-
-
-
-
-    // setup event listener for when browser loses focus
-    window.addEventListener("blur", onPause);
-    window.addEventListener("focus", onResume);
-
-    // setup event listeners for keyboard keys
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("keyup", onKeyUp);
-    // game listeners
-    stage.addEventListener("onEnemySurvived", onGameEvent, true);
-
-    // startup the ticker
-    createjs.Ticker.setFPS(GameSettings.frameRate);
-    createjs.Ticker.addEventListener("tick", onTick);
-}
-
-function onDropEnemy(e) {
-    var enemy = objectPool.getEnemy();
-    enemy.startMe();
-
-}
-
 function onPause(e) {
     window.clearInterval(enemyTimer);
     createjs.Ticker.removeEventListener("tick", onTick);
@@ -214,26 +226,38 @@ function onResume(e) {
     createjs.Ticker.addEventListener("tick", onTick);
 }
 
+function onDropEnemy(e) {
+    var enemy = objectPool.getEnemy();
+    enemy.startMe();
+}
+
 function onGameEvent(e) {
 
     switch (e.type) {
         case "onEnemySurvived":
-            console.log("oh no - enemy survived!");
+            console.log("EVENT : enemy survived!");
+            break;
+        case "onEnemyKilled":
+            console.log("EVENT : enemy killed!");
+            break;
+        case "onPlayerKilled":
+            console.log("EVENT : player killed!");
             break;
 
 
-
     }
-
 }
 
 function onTick(e) {
     // TESTING FPS
     document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
 
-    monitorKeys();
-    if ((createjs.Ticker.getTicks() % 2) === 0) monitorCollisions();
-    updateGameObjects();
+    // game loop stuff
+    if (playing) {
+        monitorKeys();
+        if ((createjs.Ticker.getTicks() % 2) === 0) monitorCollisions();
+        updateGameObjects();
+    }
 
     // update the stage!
 	stage.update();

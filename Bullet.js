@@ -4,9 +4,6 @@ var Bullet = function() {
     var stage = window.stage;
     var assetmanager = window.asserManager;
 
-    // custom events
-    var eventBulletKilled = new createjs.Event("onBulletKilled", true);
-
     // private property variables
     var speed = 6;
     var alive = false;
@@ -42,7 +39,6 @@ var Bullet = function() {
         sprite.stop();
         bulletContainer.removeChild(sprite);
         objectPool.dispose(this);
-        sprite.dispatchEvent(eventBulletKilled);
     };
 
     this.updateMe = function() {
@@ -50,7 +46,6 @@ var Bullet = function() {
         // has the bullet gone off the stage?
         if (sprite.y < stageUpBound) {
             this.killMe();
-            sprite.dispatchEvent(eventBulletKilled);
         }
     };
 
