@@ -11,7 +11,7 @@ var Player = function(){
     var eventPlayerKilled = new createjs.Event("onPlayerKilled", true);
 
     // private property variables
-    var speed = 2;
+    var speed = 4;
     var moving = MovingDirection.STOPPED;
     var alive = false;
 

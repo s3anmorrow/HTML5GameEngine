@@ -9,15 +9,13 @@ var Bullet = function() {
 
     // private property variables
     var speed = 6;
+    var alive = false;
 
     // get sprite and setup
     var sprite = assetManager.getSprite("GameSprites");
     sprite.gotoAndStop("bullet");
     sprite.regX = sprite.getBounds().width / 2;
     sprite.regY = sprite.getBounds().height / 2;
-    // ?????????????????????????????? this will need to be changed
-
-    // ???????????????????????????????????????????????????????????
 
     // determine top stage bounds
     var stageUpBound = -sprite.getBounds().height;
@@ -27,14 +25,20 @@ var Bullet = function() {
         return sprite;
     };
 
+    this.getAlive = function() {
+        return alive;
+    };
+
     // --------------------------------------------------- public methods
     this.startMe = function(x, y) {
+        alive = true;
         sprite.x = x;
         sprite.y = y;
         stage.addChild(sprite);
     };
 
     this.killMe = function() {
+        alive = false;
         sprite.stop();
         stage.removeChild(sprite);
         objectPool.dispose(this);

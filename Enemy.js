@@ -12,6 +12,7 @@ var Enemy = function() {
     // private property variables
     var moving = MovingDirection.STOPPED;
     var speed = 2;
+    var alive = false;
     var angleOfRightTravel = 45;
     var angleOfLeftTravel = 135;
     var rangeOfTravel = 100;
@@ -26,9 +27,6 @@ var Enemy = function() {
     var sprite = assetManager.getSprite("GameSprites");
     sprite.x = 50;
     sprite.y = 30;
-    // ?????????????????????????????? this will need to be changed
-    sprite.gotoAndStop("bugAlive");
-    // ???????????????????????????????????????????????????????????
 
     var stageLeftBound = sprite.getBounds().width;
     var stageRightBound = stageWidth - (sprite.getBounds().width * 2);
@@ -55,8 +53,13 @@ var Enemy = function() {
         return sprite;
     };
 
+    this.getAlive = function() {
+        return alive;
+    };
+
     // --------------------------------------------------- public methods
     this.startMe = function() {
+        alive = true;
         // randomly set behaviour properties
         sprite.y = -sprite.getBounds().height;
         sprite.x = randomMe(stageLeftBound, stageRightBound);
@@ -66,6 +69,7 @@ var Enemy = function() {
         rangeOfTravel = sprite.getBounds().width * 2;
         //speed = randomMe(2,4);
         speed = 4;
+        sprite.gotoAndStop("bugAlive");
 
         // store where we start from
         startX = sprite.x;
@@ -75,10 +79,12 @@ var Enemy = function() {
         moving = MovingDirection.RIGHT;
         stage.addChild(sprite);
 
+        /*
         // collision detection test setup
         sprite.x = 265;
         sprite.y = 10;
         moving = MovingDirection.STOPPED;
+        */
     };
 
     this.stopMe = function() {
@@ -90,6 +96,7 @@ var Enemy = function() {
 
         console.log("killing enemy");
 
+        alive = false;
         this.stopMe();
         sprite.gotoAndPlay("bugDead");
         sprite.addEventListener("animationend", onKilled);
@@ -121,6 +128,7 @@ var Enemy = function() {
             if (sprite.y > stageHeight) {
                 this.stopMe();
                 sprite.dispatchEvent(eventEnemySurvived);
+                objectPool.dispose(me);
             }
 
         }

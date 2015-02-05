@@ -9,8 +9,8 @@ var ObjectPool = function() {
 
 	// starting constant maximums of the game elements (virusMax can be extended by Object pool if needed)
 	var PLAYER_MAX = 1;
-    var ENEMY_MAX = 20;
-    var BULLET_MAX = 20;
+    var ENEMY_MAX = 50;
+    var BULLET_MAX = 5;
 
 	// object pool arrays
 	var playerPool = [];
@@ -27,9 +27,9 @@ var ObjectPool = function() {
 	var index = 0;
 
 	// ------------------------------------------------------ private methods
-	function getObject(pool,max){
+	function getObject(pool){
 		// go through existing pool and grab target object that is not in use and return it
-		for (var i = 0; i < max; i++) {
+		for (var i = 0; i < pool.length; i++) {
 			if (!pool[i].used) {
 				var object = pool[i];
 				object.used = true;
@@ -39,13 +39,23 @@ var ObjectPool = function() {
 		}
 
         // no more objects left - construct a new object (emergency!)
-        // ???????????????????????????????
+        var MyClass = pool.myClass;
+        // increment array index one past length
+        i = pool.length;
+        // construct a new object and setup and add to updateList right away
+        pool[i] = new MyClass;
+        pool[i].poolIndex = i;
+        pool[i].used = true;
+        pool[i].usedIndex = index;
+        updateList[index] = pool[i];
+        index++;
 
-
-		return null;
+		return pool[i];
 	}
 
 	function constructObjects(pool,max,Class) {
+        // store class name for emergency constructing later
+        pool.myClass = Class;
 		// adding new object to a pool
 		for (var i = 0; i < max; i++) {
 			pool[i] = new Class;
@@ -69,31 +79,34 @@ var ObjectPool = function() {
 	}
 
 	this.getPlayer = function() {
-		return getObject(playerPool, PLAYER_MAX);
+		return getObject(playerPool);
     }
 
 	this.getEnemy = function() {
-		return getObject(enemyPool, ENEMY_MAX);
+		return getObject(enemyPool);
     }
 
 	this.getBullet = function() {
-		return getObject(bulletPool, BULLET_MAX);
+		return getObject(bulletPool);
     }
 
     this.dispose = function(o) {
 		// which type of game object are we disposing?
 		if (o instanceof Player) {
 			playerPool[o.poolIndex].used = false;
+            console.log("dispose player @ pool index " + o.poolIndex);
 		} else if (o instanceof Enemy) {
 			enemyPool[o.poolIndex].used = false;
+            console.log("dispose enemy @ pool index " + o.poolIndex);
 		} else if (o instanceof Bullet) {
 			bulletPool[o.poolIndex].used = false;
+            console.log("dispose bullet @ pool index " + o.poolIndex);
 		}
 
         // clear out disposed object from updateList
         updateList[o.usedIndex] = null;
 
-		console.log("dispose " + " @ pool index " + o.poolIndex);
+
 	}
 
 };
