@@ -9,11 +9,6 @@ var Enemy = function() {
     var eventEnemyKilled = new createjs.Event("onEnemyKilled", true);
     var eventEnemySurvived = new createjs.Event("onEnemySurvived", true);
 
-    // public properties for objectPool use
-    this.type = "Enemy";
-	this.used = false;
-	this.poolIndex = -1;
-
     // private property variables
     var moving = MovingDirection.STOPPED;
     var speed = 2;

@@ -4,8 +4,8 @@
 
 var ObjectPool = function() {
 	// private property variables
-	// list of all game objects to be rendered onto the canvas
-	//var usedList = [];
+	// list of all game objects that are being used and are to be updated on ticker (presumably these are visible)
+	var updateList = [];
 
 	// starting constant maximums of the game elements (virusMax can be extended by Object pool if needed)
 	var PLAYER_MAX = 1;
@@ -21,8 +21,9 @@ var ObjectPool = function() {
 	this.playerPool = playerPool;
 	this.enemyPool = enemyPool;
     this.bulletPool = bulletPool;
+    this.updateList = updateList;
 
-	// other
+	// index for updateList
 	var index = 0;
 
 	// ------------------------------------------------------ private methods
@@ -32,7 +33,7 @@ var ObjectPool = function() {
 			if (!pool[i].used) {
 				var object = pool[i];
 				object.used = true;
-				//usedList[object.usedIndex] = object;
+				updateList[object.usedIndex] = object;
 				return object;
 			}
 		}
@@ -49,14 +50,15 @@ var ObjectPool = function() {
 		for (var i = 0; i < max; i++) {
 			pool[i] = new Class;
 			pool[i].poolIndex = i;
-			//pool[i].usedIndex = index;
-			//usedList[index] = null;
-			//index++;
+            pool[i].used = false;
+			pool[i].usedIndex = index;
+			updateList[index] = null;
+			index++;
 		}
 	}
 
 	// ------------------------------------------------------ public methods
-	this.getUsedList = function() {return usedList}
+	this.getUpdateList = function() {return updateList}
 
 	this.init = function() {
 		// pool object construction
@@ -80,18 +82,18 @@ var ObjectPool = function() {
 
     this.dispose = function(o) {
 		// which type of game object are we disposing?
-		if (o.type == "Player") {
+		if (o instanceof Player) {
 			playerPool[o.poolIndex].used = false;
-			//usedList[o.usedIndex] = null;
-		} else if (o.type == "Enemy") {
+		} else if (o instanceof Enemy) {
 			enemyPool[o.poolIndex].used = false;
-			//usedList[o.usedIndex] = null;
-		} else if (o.type == "Bullet") {
+		} else if (o instanceof Bullet) {
 			bulletPool[o.poolIndex].used = false;
-			//usedList[o.usedIndex] = null;
 		}
 
-		console.log("dispose " + o.type + " @ pool index " + o.poolIndex);
+        // clear out disposed object from updateList
+        updateList[o.usedIndex] = null;
+
+		console.log("dispose " + " @ pool index " + o.poolIndex);
 	}
 
 };

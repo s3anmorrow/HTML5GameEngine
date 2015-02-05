@@ -9,7 +9,6 @@ var canvas = null;
 // key booleans
 var leftKey = false;
 var rightKey = false;
-var spaceKey = false;
 // frame rate of game
 var frameRate = 24;
 
@@ -17,9 +16,11 @@ var frameRate = 24;
 var assetManager = null;
 var background = null;
 var player = null;
+var updateList = null;
+
 // ????????????????????????????? remove this
 var enemy = null;
-var bullet = null;
+//var bullet = null;
 // ?????????????????????????????????????????
 
 // ------------------------------------------------------------ private methods
@@ -36,8 +37,21 @@ function monitorKeys() {
     }
 }
 
+function fireKey() {
+
+    console.log("fire!");
+
+    var bullet = objectPool.getBullet();
+    var x = player.getSprite().x;
+    var y = player.getSprite().y;
+    bullet.startMe(x, y);
+
+
+}
+
 function monitorCollisions() {
 
+    /*
     // check collisions between enemies and bullets
     if (ndgmr.checkPixelCollision(enemy.getSprite(), bullet.getSprite(), 1) !== false) {
 
@@ -57,9 +71,17 @@ function monitorCollisions() {
         player.killMe();
         enemy.killMe();
     }
+    */
+}
 
-
-
+function updateObjects() {
+    // loop through all used objects of ObjectPool and update them all in turn
+	var length = updateList.length;
+	var target = null;
+	for (var n=0; n<length; n++) {
+		target = updateList[n];
+		if (target !== null) target.updateMe();
+	}
 }
 
 function randomMe(low, high) {
@@ -102,14 +124,13 @@ function onKeyDown(e) {
     // which keystroke is down?
     if (e.keyCode == 37) leftKey = true;
     else if (e.keyCode == 39) rightKey = true;
-    else if (e.keyCode == 32) spaceKey = true;
 }
 
 function onKeyUp(e) {
     // which keystroke is up?
     if (e.keyCode == 37) leftKey = false;
     else if (e.keyCode == 39) rightKey = false;
-    else if (e.keyCode == 32) rightKey = false;
+    else if (e.keyCode == 32) fireKey();
 }
 
 function onReady(e) {
@@ -127,9 +148,9 @@ function onReady(e) {
     // construct object pool
 	objectPool = new ObjectPool();
 	objectPool.init();
+    updateList = objectPool.getUpdateList();
 
     // construct game objects
-    //player = new Player();
 
     // ????????????????????????? testing
     player = objectPool.getPlayer();
@@ -137,9 +158,6 @@ function onReady(e) {
 
     enemy = objectPool.getEnemy();
     enemy.startMe();
-
-    bullet = objectPool.getBullet();
-    bullet.startMe();
 
 
 
@@ -174,18 +192,9 @@ function onTick(e) {
     // TESTING FPS
     document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
 
-
-
     monitorKeys();
-    player.updateMe();
-    // ?????????????????????????????????
-    enemy.updateMe();
-    bullet.updateMe();
-    // ?????????????????????????????????
-
     monitorCollisions();
-
-
+    updateObjects();
 
     // update the stage!
 	stage.update();

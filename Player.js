@@ -1,6 +1,7 @@
 var Player = function(){
 
     // TODO adjust gotoAndStop()
+    // TODO figure out why the snake is not at 0,0 when placed there - y is off
 
     // local references to global variables
     var stage = window.stage;
@@ -9,25 +10,20 @@ var Player = function(){
     // custom events
     var eventPlayerKilled = new createjs.Event("onPlayerKilled", true);
 
-    // public properties for objectPool use
-    this.type = "Player";
-	this.used = false;
-	this.poolIndex = -1;
-
     // private property variables
-    var speed = 4;
+    var speed = 2;
     var moving = MovingDirection.STOPPED;
     var alive = false;
 
     // get sprite and setup
     var sprite = assetManager.getSprite("GameSprites");
-    sprite.scaleX = 1;
+    //sprite.scaleX = 1;
+    sprite.gotoAndStop("snakeAlive");
     sprite.regX = sprite.getBounds().width / 2;
     sprite.regY = sprite.getBounds().height / 2;
-    sprite.x = 300;
-    sprite.y = 500;
+
     // ?????????????????????????????? this will need to be changed
-    sprite.gotoAndStop("snakeAlive");
+
     // ???????????????????????????????????????????????????????????
 
     // determine left and right stage bounds
@@ -50,6 +46,8 @@ var Player = function(){
     // --------------------------------------------------- public methods
     this.startMe = function() {
         alive = true;
+        sprite.x = 300;
+        sprite.y = 500;
         stage.addChild(sprite);
     };
 
