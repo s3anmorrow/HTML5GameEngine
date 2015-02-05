@@ -94,19 +94,17 @@ var ObjectPool = function() {
 		// which type of game object are we disposing?
 		if (o instanceof Player) {
 			playerPool[o.poolIndex].used = false;
-            console.log("dispose player @ pool index " + o.poolIndex);
+            //console.log("dispose player @ pool index " + o.poolIndex);
 		} else if (o instanceof Enemy) {
 			enemyPool[o.poolIndex].used = false;
-            console.log("dispose enemy @ pool index " + o.poolIndex);
+            //console.log("dispose enemy @ pool index " + o.poolIndex);
 		} else if (o instanceof Bullet) {
 			bulletPool[o.poolIndex].used = false;
-            console.log("dispose bullet @ pool index " + o.poolIndex);
+            //console.log("dispose bullet @ pool index " + o.poolIndex);
 		}
 
         // clear out disposed object from updateList
         updateList[o.usedIndex] = null;
-
-
 	}
 
 };

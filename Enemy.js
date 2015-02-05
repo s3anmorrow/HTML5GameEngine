@@ -92,14 +92,10 @@ var Enemy = function() {
     };
 
     this.killMe = function() {
-
-        console.log("killing enemy");
-
         alive = false;
         this.stopMe();
         sprite.gotoAndPlay("bugDead");
         sprite.addEventListener("animationend", onKilled);
-
     };
 
     this.updateMe = function() {

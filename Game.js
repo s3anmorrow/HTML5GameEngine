@@ -88,7 +88,7 @@ function monitorCollisions() {
         var enemy = enemyPool[n];
         if (enemy.getAlive()) {
             if (ndgmr.checkPixelCollision(enemy.getSprite(), player.getSprite(), 1) !== false) {
-                player.killMe();
+                player.hitMe();
                 enemy.killMe();
             }
         }
@@ -150,9 +150,10 @@ function onReady(e) {
     gameScreen.gotoAndStop("gameScreen");
     overScreen = assetManager.getSprite("GameSprites");
     overScreen.gotoAndStop("overScreen");
+    overScreen.addEventListener("click", onResetGame);
     introScreen = assetManager.getSprite("GameSprites");
     introScreen.gotoAndStop("introScreen");
-    introScreen.addEventListener("click",onStartGame);
+    introScreen.addEventListener("click", onStartGame);
     stage.addChild(introScreen);
 
     // construct containers for game objects
@@ -171,8 +172,8 @@ function onReady(e) {
 }
 
 function onStartGame(e) {
+    // initialization
     playing = true;
-    // initialize current state of keys
     leftKey = false;
     rightKey = false;
     spaceKey = false;
@@ -191,6 +192,7 @@ function onStartGame(e) {
     stage.addEventListener("onEnemySurvived", onGameEvent, true);
     stage.addEventListener("onEnemyKilled", onGameEvent, true);
     stage.addEventListener("onPlayerKilled", onGameEvent, true);
+    stage.addEventListener("onPlayerHit", onGameEvent, true);
 
     // remove introScreen and add gameScreen
     stage.removeChild(introScreen);
@@ -198,9 +200,33 @@ function onStartGame(e) {
 }
 
 function onStopGame(e) {
+    // game cleanup
+    objectPool.dispose(player);
+    window.clearInterval(enemyTimer);
+    stage.removeChild(gameScreen);
+    stage.addChildAt(overScreen,0);
+
+    // kill everything
+    var length = updateList.length;
+	var target = null;
+	for (var n=0; n<length; n++) {
+		target = updateList[n];
+		if (target !== null) target.killMe();
+	}
+
+    // remove all event listeners
+    document.removeEventListener("keydown", onKeyDown);
+    document.removeEventListener("keyup", onKeyUp);
+    stage.removeAllEventListeners();
+
+    stage.removeChild(gameScreen);
+    stage.addChildAt(overScreen,0);
+}
+
+function onResetGame(e) {
     playing = false;
-
-
+    stage.removeChild(overScreen);
+    stage.addChildAt(introScreen,0);
 }
 
 function onKeyDown(e) {
@@ -235,16 +261,18 @@ function onGameEvent(e) {
 
     switch (e.type) {
         case "onEnemySurvived":
-            console.log("EVENT : enemy survived!");
+            player.hitMe();
             break;
         case "onEnemyKilled":
             console.log("EVENT : enemy killed!");
             break;
         case "onPlayerKilled":
             console.log("EVENT : player killed!");
+            onStopGame();
             break;
-
-
+        case "onPlayerHit":
+            console.log("EVENT : PLAYER HIT!");
+            break;
     }
 }
 

@@ -8,16 +8,18 @@ var Player = function(){
     var assetmanager = window.asserManager;
 
     // custom events
+    var eventPlayerHit = new createjs.Event("onPlayerHit", true);
     var eventPlayerKilled = new createjs.Event("onPlayerKilled", true);
 
     // private property variables
     var speed = 4;
     var moving = MovingDirection.STOPPED;
     var alive = false;
+    var hitPoints = 0;
 
     // get sprite and setup
     var sprite = assetManager.getSprite("GameSprites");
-    //sprite.scaleX = 1;
+    sprite.scaleX = 1;
     sprite.gotoAndStop("snakeAlive");
     sprite.regX = sprite.getBounds().width / 2;
     sprite.regY = sprite.getBounds().height / 2;
@@ -43,9 +45,15 @@ var Player = function(){
         return alive;
     };
 
+    this.getHitPoints = function() {
+        return hitPoints;
+    };
+
     // --------------------------------------------------- public methods
     this.startMe = function() {
         alive = true;
+        sprite.gotoAndStop("snakeAlive");
+        hitPoints = GameSettings.hitPoints;
         sprite.x = 300;
         sprite.y = 500;
         stage.addChild(sprite);
@@ -65,6 +73,16 @@ var Player = function(){
     this.moveRight = function() {
         sprite.play();
         moving = MovingDirection.RIGHT;
+    };
+
+    this.hitMe = function() {
+        if (alive) {
+            hitPoints--;
+            sprite.dispatchEvent(eventPlayerHit);
+            if (hitPoints <= 0) {
+                this.killMe();
+            }
+        }
     };
 
     this.killMe = function() {
@@ -104,8 +122,8 @@ var Player = function(){
     function onKilled(e) {
         sprite.stop();
         sprite.removeEventListener("animationend", onKilled);
-        //stage.removeChild(sprite);
         sprite.dispatchEvent(eventPlayerKilled);
+        stage.removeChild(sprite);
     }
 
 };
