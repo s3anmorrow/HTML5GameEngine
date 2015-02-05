@@ -142,9 +142,4 @@ var Enemy = function() {
         objectPool.dispose(me);
     }
 
-
-
-
-
-
 };

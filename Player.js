@@ -52,6 +52,7 @@ var Player = function(){
     // --------------------------------------------------- public methods
     this.startMe = function() {
         alive = true;
+        sprite.scaleX = 1;
         sprite.gotoAndStop("snakeAlive");
         hitPoints = GameSettings.hitPoints;
         sprite.x = 300;

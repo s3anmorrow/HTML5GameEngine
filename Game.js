@@ -13,7 +13,7 @@ var leftKey = false;
 var rightKey = false;
 // timer for dropping enemies
 var enemyTimer = null;
-var dropInterval = 1000;
+var enemyDropFreq = 0;
 // containers to add game objects to for proper layering
 var enemyContainer = null;
 var bulletContainer = null;
@@ -21,6 +21,11 @@ var bulletContainer = null;
 var updateList = null;
 // the number of bullets active at any moment
 var bulletCount = 0;
+var bulletMax = 0;
+// the number of enemies killed
+var killCount = 0;
+// the current level
+var level = 0;
 // are we playing yet?
 var playing = false;
 
@@ -46,7 +51,7 @@ function monitorKeys() {
 
 function fireKey() {
     // only if I haven't exceeded max bullets allowed
-    if (bulletCount >= GameSettings.bulletMax) return;
+    if (bulletCount >= bulletMax) return;
 
     var bullet = objectPool.getBullet();
     var x = player.getSprite().x;
@@ -177,13 +182,16 @@ function onStartGame(e) {
     leftKey = false;
     rightKey = false;
     spaceKey = false;
+    level = 1;
+    enemyDropFreq = GameSettings.enemyFrequency;
+    bulletMax = GameSettings.bulletMax;
 
     // construct player object
     player = objectPool.getPlayer();
     player.startMe();
 
     // start timer to drop enemies into game
-    enemyTimer = window.setInterval(onDropEnemy, dropInterval);
+    enemyTimer = window.setInterval(onDropEnemy, enemyDropFreq * 1000);
 
     // setup event listeners for keyboard keys
     document.addEventListener("keydown", onKeyDown);
@@ -248,7 +256,7 @@ function onPause(e) {
 }
 
 function onResume(e) {
-    enemyTimer = window.setInterval(onDropEnemy, dropInterval);
+    enemyTimer = window.setInterval(onDropEnemy, enemyDropFreq * 1000);
     createjs.Ticker.addEventListener("tick", onTick);
 }
 
@@ -265,6 +273,21 @@ function onGameEvent(e) {
             break;
         case "onEnemyKilled":
             console.log("EVENT : enemy killed!");
+            killCount++;
+            // increase level every 5 kills
+            if (killCount % 5 === 0) {
+                // increase enemy frequency
+                enemyDropFreq -= 0.25;
+                if (enemyDropFreq < 0.5) enemyDropFreq = 0.5;
+                window.clearInterval(enemyTimer);
+                enemyTimer = window.setInterval(onDropEnemy, enemyDropFreq * 1000);
+                // increase bullet max
+                bulletMax++;
+                // increase level counter
+                level++;
+
+                console.log("LEVEL UP : " + level + " Freq: " + enemyDropFreq);
+            }
             break;
         case "onPlayerKilled":
             console.log("EVENT : player killed!");
