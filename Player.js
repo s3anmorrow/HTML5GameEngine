@@ -9,6 +9,7 @@ var Player = function(){
 
     // custom events
     var eventPlayerHit = new createjs.Event("onPlayerHit", true);
+    var eventPlayerEnergize = new createjs.Event("onPlayerEnergize", true);
     var eventPlayerKilled = new createjs.Event("onPlayerKilled", true);
 
     // private property variables
@@ -85,6 +86,14 @@ var Player = function(){
             }
         }
     };
+
+    this.energizeMe = function() {
+        if (alive) {
+            hitPoints++;
+            if (hitPoints > GameSettings.hitPoints) hitPoints = GameSettings.hitPoints;
+            sprite.dispatchEvent(eventPlayerHit);
+        }
+    }
 
     this.killMe = function() {
         alive = false;

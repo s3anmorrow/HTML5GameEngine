@@ -55,7 +55,7 @@ var ScoreBoard = function() {
     // ------------------------------------------------ public methods
     this.startMe = function() {
         this.setKills(0);
-        this.setBulletMax(GameSettings.hitPoints);
+        this.setBulletMax(GameSettings.bulletMax);
         this.setHitPoints(GameSettings.hitPoints);
         stage.addChild(scoreBoardContainer);
     };

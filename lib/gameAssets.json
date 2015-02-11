@@ -42,38 +42,6 @@
     [2, 2, 600, 600, 0, 0, 0]
 ],
 "animations":{
-    "bugDead": {
-        "frames": [
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            28,
-            28,
-            28,
-            28,
-            28,
-            29,
-            30,
-            31,
-            32,
-            33,
-            18
-        ],
-        "speed": 1
-    },
-    "introScreen": {"frames": [35], "speed": 1},
-    "overScreen": {"frames": [37], "speed": 1},
-    "snakeAlive": {"frames": [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2], "speed": 1},
-    "bullet": {"frames": [34], "speed": 1},
-    "gameScreen": {"frames": [36], "speed": 1},
-    "bugAlive": {
-        "frames": [19, 19, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21],
-        "speed": 1
-    },
     "snakeDead": {
         "frames": [
             3,
@@ -105,6 +73,38 @@
             17,
             18
         ],
+        "speed": 1
+    },
+    "introScreen": {"frames": [35], "speed": 1},
+    "gameScreen": {"frames": [36], "speed": 1},
+    "overScreen": {"frames": [37], "speed": 1},
+    "snakeAlive": {"frames": [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2], "speed": 1},
+    "bullet": {"frames": [34], "speed": 1},
+    "bugDead": {
+        "frames": [
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            28,
+            28,
+            28,
+            28,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            18
+        ],
+        "speed": 1
+    },
+    "bugAlive": {
+        "frames": [19, 19, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21],
         "speed": 1
     }
 }

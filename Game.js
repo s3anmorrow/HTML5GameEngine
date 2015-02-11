@@ -58,6 +58,8 @@ function fireKey() {
     var x = player.getSprite().x;
     var y = player.getSprite().y;
     bullet.startMe(x, y);
+
+    createjs.Sound.play(GameSettings.SoundFireBullet);
 }
 
 function monitorCollisions() {
@@ -206,10 +208,13 @@ function onStartGame(e) {
     stage.addEventListener("onEnemyShot", onGameEvent, true);
     stage.addEventListener("onPlayerKilled", onGameEvent, true);
     stage.addEventListener("onPlayerHit", onGameEvent, true);
+    stage.addEventListener("onPlayerEnergize", onGameEvent, true);
 
     // remove introScreen and add gameScreen
     stage.removeChild(introScreen);
     stage.addChildAt(gameScreen,0);
+
+    createjs.Sound.play(GameSettings.SoundStartGame);
 }
 
 function onStopGame(e) {
@@ -234,6 +239,8 @@ function onStopGame(e) {
 
     stage.removeChild(gameScreen);
     stage.addChildAt(overScreen,0);
+
+    createjs.Sound.play(GameSettings.SoundGameOver);
 }
 
 function onResetGame(e) {
@@ -276,13 +283,15 @@ function onGameEvent(e) {
     switch (e.type) {
         case "onEnemySurvived":
             player.hitMe();
+            createjs.Sound.play(GameSettings.SoundEnemySurvived);
             break;
         case "onEnemyShot":
-            console.log("EVENT : enemy killed!");
+            console.log("EVENT : enemy shot!");
             killCount++;
             scoreBoard.setKills(killCount);
-            // increase level every 5 kills
-            if (killCount % 5 === 0) {
+            createjs.Sound.play(GameSettings.SoundEnemyKilled);
+            // did I level up?
+            if (killCount % GameSettings.killsPerLevel === 0) {
                 // increase enemy drop frequency
                 enemyDropFreq -= 0.25;
                 if (enemyDropFreq < 0.5) enemyDropFreq = 0.5;
@@ -290,20 +299,34 @@ function onGameEvent(e) {
                 enemyTimer = window.setInterval(onDropEnemy, enemyDropFreq * 1000);
                 // increase bullet max
                 bulletMax++;
+                if (bulletMax > 8) bulletMax = 10;
                 scoreBoard.setBulletMax(bulletMax);
                 // increase level counter
                 level++;
 
                 console.log("LEVEL UP : " + level + " Freq: " + enemyDropFreq);
             }
+
+            // did I earn hitPoints?
+            if (killCount % GameSettings.killsPerHitPoint === 0) {
+                player.energizeMe();
+            }
+
             break;
         case "onPlayerKilled":
-            console.log("EVENT : enemy shot!");
+            console.log("EVENT : player killed!");
             onStopGame();
+            createjs.Sound.play(GameSettings.SoundPlayerKilled);
             break;
         case "onPlayerHit":
             console.log("EVENT : PLAYER HIT!");
             scoreBoard.setHitPoints(player.getHitPoints());
+            createjs.Sound.play(GameSettings.SoundPlayerHit);
+            break;
+        case "onPlayerEnergize":
+            console.log("EVENT : PLAYER ENERGIZE!");
+            scoreBoard.setHitPoints(player.getHitPoints());
+            createjs.Sound.play(GameSettings.SoundPlayerEnergize);
             break;
     }
 }
