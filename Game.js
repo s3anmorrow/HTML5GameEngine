@@ -33,6 +33,7 @@ var playing = false;
 var assetManager = null;
 var background = null;
 var player = null;
+var scoreBoard = null;
 var introScreen = null;
 var gameScreen = null;
 var overScreen = null;
@@ -77,7 +78,7 @@ function monitorCollisions() {
                     var enemy = enemyPool[i];
                     if (ndgmr.checkPixelCollision(enemy.getSprite(), bullet.getSprite(), 1) !== false) {
                         bullet.killMe();
-                        enemy.killMe();
+                        enemy.shootMe();
                         break;
                     }
                 }
@@ -151,15 +152,18 @@ function onReady(e) {
     updateList = objectPool.getUpdateList();
 
     // construct screen objects
-    gameScreen = assetManager.getSprite("GameSprites");
+    gameScreen = assetManager.getSprite("GameAssets");
     gameScreen.gotoAndStop("gameScreen");
-    overScreen = assetManager.getSprite("GameSprites");
+    overScreen = assetManager.getSprite("GameAssets");
     overScreen.gotoAndStop("overScreen");
     overScreen.addEventListener("click", onResetGame);
-    introScreen = assetManager.getSprite("GameSprites");
+    introScreen = assetManager.getSprite("GameAssets");
     introScreen.gotoAndStop("introScreen");
     introScreen.addEventListener("click", onStartGame);
     stage.addChild(introScreen);
+
+    // construct scoreboard
+    scoreBoard = new ScoreBoard();
 
     // construct containers for game objects
     enemyContainer = new createjs.Container();
@@ -186,9 +190,10 @@ function onStartGame(e) {
     enemyDropFreq = GameSettings.enemyFrequency;
     bulletMax = GameSettings.bulletMax;
 
-    // construct player object
+    // construct game objects
     player = objectPool.getPlayer();
     player.startMe();
+    scoreBoard.startMe();
 
     // start timer to drop enemies into game
     enemyTimer = window.setInterval(onDropEnemy, enemyDropFreq * 1000);
@@ -198,7 +203,7 @@ function onStartGame(e) {
     document.addEventListener("keyup", onKeyUp);
     // game listeners
     stage.addEventListener("onEnemySurvived", onGameEvent, true);
-    stage.addEventListener("onEnemyKilled", onGameEvent, true);
+    stage.addEventListener("onEnemyShot", onGameEvent, true);
     stage.addEventListener("onPlayerKilled", onGameEvent, true);
     stage.addEventListener("onPlayerHit", onGameEvent, true);
 
@@ -233,6 +238,7 @@ function onStopGame(e) {
 
 function onResetGame(e) {
     playing = false;
+    scoreBoard.stopMe();
     stage.removeChild(overScreen);
     stage.addChildAt(introScreen,0);
 }
@@ -271,18 +277,20 @@ function onGameEvent(e) {
         case "onEnemySurvived":
             player.hitMe();
             break;
-        case "onEnemyKilled":
+        case "onEnemyShot":
             console.log("EVENT : enemy killed!");
             killCount++;
+            scoreBoard.setKills(killCount);
             // increase level every 5 kills
             if (killCount % 5 === 0) {
-                // increase enemy frequency
+                // increase enemy drop frequency
                 enemyDropFreq -= 0.25;
                 if (enemyDropFreq < 0.5) enemyDropFreq = 0.5;
                 window.clearInterval(enemyTimer);
                 enemyTimer = window.setInterval(onDropEnemy, enemyDropFreq * 1000);
                 // increase bullet max
                 bulletMax++;
+                scoreBoard.setBulletMax(bulletMax);
                 // increase level counter
                 level++;
 
@@ -290,11 +298,12 @@ function onGameEvent(e) {
             }
             break;
         case "onPlayerKilled":
-            console.log("EVENT : player killed!");
+            console.log("EVENT : enemy shot!");
             onStopGame();
             break;
         case "onPlayerHit":
             console.log("EVENT : PLAYER HIT!");
+            scoreBoard.setHitPoints(player.getHitPoints());
             break;
     }
 }

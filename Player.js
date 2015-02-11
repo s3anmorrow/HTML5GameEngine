@@ -5,7 +5,7 @@ var Player = function(){
 
     // local references to global variables
     var stage = window.stage;
-    var assetmanager = window.asserManager;
+    var assetmanager = window.assetManager;
 
     // custom events
     var eventPlayerHit = new createjs.Event("onPlayerHit", true);
@@ -18,7 +18,7 @@ var Player = function(){
     var hitPoints = 0;
 
     // get sprite and setup
-    var sprite = assetManager.getSprite("GameSprites");
+    var sprite = assetManager.getSprite("GameAssets");
     sprite.scaleX = 1;
     sprite.gotoAndStop("snakeAlive");
     sprite.regX = sprite.getBounds().width / 2;

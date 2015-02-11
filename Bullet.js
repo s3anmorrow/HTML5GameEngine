@@ -2,14 +2,14 @@ var Bullet = function() {
 
     // local references to global variables
     var stage = window.stage;
-    var assetmanager = window.asserManager;
+    var assetmanager = window.assetManager;
 
     // private property variables
     var speed = 6;
     var alive = false;
 
     // get sprite and setup
-    var sprite = assetManager.getSprite("GameSprites");
+    var sprite = assetManager.getSprite("GameAssets");
     sprite.gotoAndStop("bullet");
     sprite.regX = sprite.getBounds().width / 2;
     sprite.regY = sprite.getBounds().height / 2;

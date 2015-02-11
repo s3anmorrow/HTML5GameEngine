@@ -2,11 +2,11 @@ var Enemy = function() {
 
     // local references to global variables
     var stage = window.stage;
-    var assetmanager = window.asserManager;
+    var assetmanager = window.assetManager;
     var me = this;
 
     // custom events
-    var eventEnemyKilled = new createjs.Event("onEnemyKilled", true);
+    var eventEnemyShot = new createjs.Event("onEnemyShot", true);
     var eventEnemySurvived = new createjs.Event("onEnemySurvived", true);
 
     // private property variables
@@ -24,7 +24,8 @@ var Enemy = function() {
     var stageHeight = stage.canvas.height;
 
     // get sprite and setup
-    var sprite = assetManager.getSprite("GameSprites");
+    var sprite = assetManager.getSprite("GameAssets");
+    sprite.gotoAndStop("bugAlive");
     sprite.x = 50;
     sprite.y = 30;
 
@@ -91,6 +92,11 @@ var Enemy = function() {
         moving = MovingDirection.STOPPED;
     };
 
+    this.shootMe = function(){
+        this.killMe();
+        sprite.dispatchEvent(eventEnemyShot);
+    }
+
     this.killMe = function() {
         alive = false;
         this.stopMe();
@@ -135,8 +141,6 @@ var Enemy = function() {
     function onKilled(e) {
         sprite.stop();
         sprite.removeEventListener("animationend", onKilled);
-        //stage.removeChild(sprite);
-        sprite.dispatchEvent(eventEnemyKilled);
         enemyContainer.removeChild(sprite);
         // return object to pool
         objectPool.dispose(me);
