@@ -264,19 +264,16 @@ function onKeyUp(e) {
 }
 
 function onPause(e) {
-    window.clearInterval(enemyTimer);
+    if (playing) window.clearInterval(enemyTimer);
     createjs.Ticker.removeEventListener("tick", onTick);
 }
 
 function onResume(e) {
-    enemyTimer = window.setInterval(onDropEnemy, enemyDropFreq * 1000);
+    if (playing) enemyTimer = window.setInterval(onDropEnemy, enemyDropFreq * 1000);
     createjs.Ticker.addEventListener("tick", onTick);
 }
 
 function onDropEnemy(e) {
-
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!! DROPPING ENEMY");
-
     var enemy = objectPool.getEnemy();
     enemy.startMe();
 }

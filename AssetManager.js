@@ -55,6 +55,8 @@ var AssetManager = function() {
     var total = -1;
     // array of spritesheet objects
     var spriteSheets = [];
+    // array of JSON for each spritesheet
+    var spriteSheetsJSON = [];
     // LoadQueue object
     preloader = new createjs.LoadQueue();
 
@@ -65,7 +67,7 @@ var AssetManager = function() {
 	// ------------------------------------------------------ event handlers
     function onLoaded(e) {
 
-        console.log("asset loaded: " + e.item.src);
+        console.log("asset loaded: " + e.item.src + " type: " + e.item.type);
 
         // what type of asset was loaded?
         switch(e.item.type) {
@@ -75,19 +77,21 @@ var AssetManager = function() {
                 var id = e.item.id;
                 // store a reference to the actual image that was preloaded
                 var image = e.result;
-                // get data object from manifest of currently loaded spritesheet
-                var data = e.item.data;
+                // get data object from JSON array (previously loaded)
+                var data = spriteSheetsJSON[id];
                 // add images property to data object and tack on loaded spritesheet image from LoadQueue
                 // this is so that the SpriteSheet constructor doesn't preload the image again
                 // it will do this if you feed it the string path of the spritesheet
                 data.images = [image];
-
                 // construct Spritesheet object from source
                 var spriteSheet = new createjs.SpriteSheet(data);
-
                 // store spritesheet object for later retrieval
                 spriteSheets[id] = spriteSheet;
                 break;
+            case createjs.LoadQueue.JSON:
+                // get spritesheet this JSON object belongs to and store for spritesheet construction later
+                var spriteSheetID = e.item.spritesheet;
+                spriteSheetsJSON[spriteSheetID] = e.result;
             case createjs.LoadQueue.SOUND:
                 // sound loaded
                 break;
