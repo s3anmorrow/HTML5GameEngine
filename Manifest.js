@@ -149,13 +149,38 @@ var manifest = [
         }
     },
     {
-        src:"sounds/PlacedSound.ogg",
-        id:"PlacedSound",
+        src:"sounds/boing.ogg",
+        id:"boing",
         data:4
     },
     {
-        src:"sounds/SnappedSound.ogg",
-        id:"SnappedSound",
+        src:"sounds/whonk.ogg",
+        id:"whonk",
+        data:4
+    },
+    {
+        src:"sounds/shoot.ogg",
+        id:"shoot",
+        data:4
+    },
+    {
+        src:"sounds/comeon.ogg",
+        id:"comeon",
+        data:4
+    },
+    {
+        src:"sounds/metalShard.ogg",
+        id:"metalShard",
+        data:4
+    },
+    {
+        src:"sounds/metalShard.ogg",
+        id:"metalShard",
+        data:4
+    },
+    {
+        src:"sounds/powerUp.ogg",
+        id:"powerUp",
         data:4
     }
 ];

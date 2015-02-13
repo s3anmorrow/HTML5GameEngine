@@ -5,7 +5,7 @@ var Bullet = function() {
     var assetmanager = window.assetManager;
 
     // private property variables
-    var speed = 6;
+    var speed = GameSettings.bulletSpeed;
     var alive = false;
 
     // get sprite and setup

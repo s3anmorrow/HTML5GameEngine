@@ -3,8 +3,14 @@ var GameSettings = {
 
     // the framerate of the game - speeds or slows down the whole game
     "frameRate":30,
+    // the speed of the player
+    "playerSpeed":4,
+    // the speed of the bullets
+    "bulletSpeed":6,
     // the number of bullets allowed to be shot at one time at the start of the game
-    "bulletMax":10,
+    "bulletMaxAtStart":3,
+    // the maximum number of bullets allowed to be shot at one time EVER in the game
+    "bulletMaxForGame":8,
     // the number of hitPoints the player starts with - hitPoints are taken away when a enemy gets away OR when the player touches an enemy
     "hitPoints":3,
     // the number of kills required to gain back a hitPoint
@@ -17,13 +23,13 @@ var GameSettings = {
     "hitPointsBarColor":"#FFCC33",
 
     // sound effects
-    "SoundEnemyKilled":"SnappedSound",
-    "SoundPlayerHit":"SnappedSound",
-    "SoundPlayerEnergize":"SnappedSound",
-    "SoundPlayerKilled":"SnappedSound",
-    "SoundEnemySurvived":"SnappedSound",
-    "SoundStartGame":"SnappedSound",
-    "SoundGameOver":"SnappedSound",
-    "SoundFireBullet":"SnappedSound"
+    "SoundEnemyKilled":"whonk",
+    "SoundPlayerHit":"boing",
+    "SoundPlayerEnergize":"energize",
+    "SoundPlayerKilled":"boing",
+    "SoundEnemySurvived":"metalShard",
+    "SoundStartGame":"powerUp",
+    "SoundGameOver":"comeon",
+    "SoundFireBullet":"shoot"
 
 };

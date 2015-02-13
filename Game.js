@@ -21,7 +21,7 @@ var bulletContainer = null;
 var updateList = null;
 // the number of bullets active at any moment
 var bulletCount = 0;
-var bulletMax = 0;
+var bulletMaxAtStart = 0;
 // the number of enemies killed
 var killCount = 0;
 // the current level
@@ -190,7 +190,7 @@ function onStartGame(e) {
     spaceKey = false;
     level = 1;
     enemyDropFreq = GameSettings.enemyFrequency;
-    bulletMax = GameSettings.bulletMax;
+    bulletMax = GameSettings.bulletMaxAtStart;
 
     // construct game objects
     player = objectPool.getPlayer();
@@ -274,6 +274,9 @@ function onResume(e) {
 }
 
 function onDropEnemy(e) {
+
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!! DROPPING ENEMY");
+
     var enemy = objectPool.getEnemy();
     enemy.startMe();
 }
@@ -297,9 +300,9 @@ function onGameEvent(e) {
                 if (enemyDropFreq < 0.5) enemyDropFreq = 0.5;
                 window.clearInterval(enemyTimer);
                 enemyTimer = window.setInterval(onDropEnemy, enemyDropFreq * 1000);
-                // increase bullet max
+                // increase bullet max with level
                 bulletMax++;
-                if (bulletMax > 8) bulletMax = 10;
+                if (bulletMax > GameSettings.bulletMaxForGame) bulletMax = GameSettings.bulletMaxForGame;
                 scoreBoard.setBulletMax(bulletMax);
                 // increase level counter
                 level++;
