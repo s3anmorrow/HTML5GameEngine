@@ -1,6 +1,6 @@
 {
 "framerate":24,
-"images":["gameAssets.png","Deerfire_high_res.png"],
+"images":["gameAssets.png"],
 "frames":[
     [1064, 606, 70, 16, 0, -3, -3],
     [993, 606, 67, 21, 0, 0, 0],
@@ -42,7 +42,37 @@
     [2, 2, 600, 600, 0, 0, 0]
 ],
 "animations":{
-    "snakeDead": {
+    "introScreen": {"speed": 1, "frames": [35]},
+    "enemyAlive": {
+        "speed": 1,
+        "frames": [19, 19, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21]
+    },
+    "enemyDead": {
+        "speed": 1,
+        "frames": [
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            28,
+            28,
+            28,
+            28,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            18
+        ]
+    },
+    "bullet": {"speed": 1, "frames": [34]},
+    "playerDead": {
+        "speed": 1,
         "frames": [
             3,
             4,
@@ -72,40 +102,10 @@
             16,
             17,
             18
-        ],
-        "speed": 1
+        ]
     },
-    "introScreen": {"frames": [35], "speed": 1},
-    "gameScreen": {"frames": [36], "speed": 1},
-    "overScreen": {"frames": [37], "speed": 1},
-    "snakeAlive": {"frames": [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2], "speed": 1},
-    "bullet": {"frames": [34], "speed": 1},
-    "bugDead": {
-        "frames": [
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            28,
-            28,
-            28,
-            28,
-            28,
-            29,
-            30,
-            31,
-            32,
-            33,
-            18
-        ],
-        "speed": 1
-    },
-    "bugAlive": {
-        "frames": [19, 19, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21],
-        "speed": 1
-    }
+    "overScreen": {"speed": 1, "frames": [37]},
+    "playerAlive": {"speed": 1, "frames": [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2]},
+    "gameScreen": {"speed": 1, "frames": [36]}
 }
 }

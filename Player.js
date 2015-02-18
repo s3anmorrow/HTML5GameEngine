@@ -1,8 +1,5 @@
 var Player = function(){
 
-    // TODO adjust gotoAndStop()
-    // TODO figure out why the snake is not at 0,0 when placed there - y is off
-
     // local references to global variables
     var stage = window.stage;
     var assetmanager = window.assetManager;
@@ -21,13 +18,9 @@ var Player = function(){
     // get sprite and setup
     var sprite = assetManager.getSprite("GameAssets");
     sprite.scaleX = 1;
-    sprite.gotoAndStop("snakeAlive");
+    sprite.gotoAndStop("playerAlive");
     sprite.regX = sprite.getBounds().width / 2;
     sprite.regY = sprite.getBounds().height / 2;
-
-    // ?????????????????????????????? this will need to be changed
-
-    // ???????????????????????????????????????????????????????????
 
     // determine left and right stage bounds
     var stageLeftBound = sprite.getBounds().width / 2;
@@ -54,7 +47,7 @@ var Player = function(){
     this.startMe = function() {
         alive = true;
         sprite.scaleX = 1;
-        sprite.gotoAndStop("snakeAlive");
+        sprite.gotoAndStop("playerAlive");
         hitPoints = GameSettings.hitPoints;
         sprite.x = 300;
         sprite.y = 500;
@@ -98,7 +91,7 @@ var Player = function(){
     this.killMe = function() {
         alive = false;
         this.stopMe();
-        sprite.gotoAndPlay("snakeDead");
+        sprite.gotoAndPlay("playerDead");
         sprite.addEventListener("animationend", onKilled);
     };
 
@@ -122,6 +115,7 @@ var Player = function(){
 
                 // ?????????????????????????????
                 // set animation to idle sequence
+                // TODO add hurt animation to player
 
 
             }

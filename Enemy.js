@@ -25,7 +25,7 @@ var Enemy = function() {
 
     // get sprite and setup
     var sprite = assetManager.getSprite("GameAssets");
-    sprite.gotoAndStop("bugAlive");
+    sprite.gotoAndStop("enemyAlive");
     sprite.x = 50;
     sprite.y = 30;
 
@@ -61,7 +61,7 @@ var Enemy = function() {
     // --------------------------------------------------- public methods
     this.startMe = function() {
         alive = true;
-        sprite.gotoAndPlay("bugAlive");
+        sprite.gotoAndPlay("enemyAlive");
 
         // randomly set behaviour properties
         sprite.y = -sprite.getBounds().height;
@@ -100,7 +100,7 @@ var Enemy = function() {
     this.killMe = function() {
         alive = false;
         this.stopMe();
-        sprite.gotoAndPlay("bugDead");
+        sprite.gotoAndPlay("enemyDead");
         sprite.addEventListener("animationend", onKilled);
     };
 

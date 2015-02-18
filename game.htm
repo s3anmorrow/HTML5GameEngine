@@ -5,6 +5,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>HTML5 Game Engine</title>
 		<link rel="stylesheet" type="text/css" href="styles.css" />
+	</head>
+    <body onload="onInit();">
+        <canvas id="stage"></canvas>
+        <div style="margin-top:10px;margin-left:10px;">HTML5 Game Engine - NSCC Game Development Program : Truro Campus<br/>By Sean Morrow [Winter 2015]</div>
+        <div id="fps" style="margin-left:10px;">Game Loading...</div>
+
         <script type="text/javascript" src="http://code.createjs.com/preloadjs-0.4.1.min.js"></script>
         <script type="text/javascript" src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
         <script type="text/javascript" src="http://code.createjs.com/soundjs-0.5.2.min.js"></script>
@@ -18,11 +24,6 @@
         <script type="text/javascript" src="ScoreBoard.js"></script>
         <script type="text/javascript" src="GameSettings.js"></script>
 		<script type="text/javascript" src="Game.js"></script>
-	</head>
-    <body onload="onInit();">
-        <canvas id="stage" style="width:600px;height:600px;margin-left:10px;margin-top:10px"></canvas>
-        <div style="margin-top:10px;margin-left:10px;">HTML5 Game Engine - NSCC Game Development Program : Truro Campus<br/>By Sean Morrow [Winter 2015]</div>
-        <div id="fps" style="margin-left:10px;"></div>
     </body>
 </html>
 

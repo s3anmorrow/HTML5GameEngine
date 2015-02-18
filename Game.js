@@ -30,6 +30,7 @@ var level = 0;
 var playing = false;
 
 // game objects
+var txtLoading = null;
 var assetManager = null;
 var background = null;
 var player = null;
@@ -118,10 +119,14 @@ function randomMe(low, high) {
 	return Math.floor(Math.random() * (1 + high - low)) + low;
 }
 
+function updateLoadingConsole(msg) {
+    txtLoading.text += msg + "\n";
+    console.log(msg);
+    stage.update();
+}
+
 // ------------------------------------------------------------ event handlers
 function onInit() {
-	console.log(">> initializing");
-
 	// get reference to canvas
 	canvas = document.getElementById("stage");
 	// set canvas to as wide/high as the browser window
@@ -129,6 +134,13 @@ function onInit() {
 	canvas.height = 600;
 	// create stage object
     stage = new createjs.Stage(canvas);
+
+    // setup loading console
+    txtLoading = new createjs.Text("Game Loading...\n\n","10px Arial", "#FFFFFF");
+    txtLoading.x = 10;
+    txtLoading.y = 10;
+    stage.addChild(txtLoading);
+    updateLoadingConsole(">> initializing");
 
     // construct preloader object to load spritesheet and sound assets
     assetManager = new AssetManager();
@@ -140,11 +152,12 @@ function onInit() {
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 function onProgress(e) {
-    console.log("progress: " + assetManager.getProgress());
+    updateLoadingConsole("progress: " + Math.ceil(assetManager.getProgress() * 100) + "%");
 }
 
 function onReady(e) {
-    console.log(">> setup");
+    updateLoadingConsole(">> setup");
+
     // kill event listener
 	stage.removeEventListener("onAssetLoaded", onProgress);
     stage.removeEventListener("onAllAssetsLoaded", onReady);
@@ -181,6 +194,8 @@ function onReady(e) {
     // startup the ticker
     createjs.Ticker.setFPS(GameSettings.frameRate);
     createjs.Ticker.addEventListener("tick", onTick);
+
+    updateLoadingConsole(">> game ready");
 }
 
 function onStartGame(e) {

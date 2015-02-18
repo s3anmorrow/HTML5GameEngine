@@ -1,51 +1,58 @@
 /*
-* AssetManager class
+* AssetManager Class for ZOE workflow
 * Sean Morrow
 * May 6 / 2014
 *
 * USAGE:
 * > Construct AssetManager object once and give it a global scope (or pass it around to different game objects)
+* > Listen for AssetManager custom events to know when progress made and when finished loading:
+* stage.addEventListener("onAssetLoaded", onProgress);
+* stage.addEventListener("onAllAssetsLoaded", onReady);
+*
 * > Call loadAssets(manifest) method and provide loading manifest as argument
-* > AssetManager will handle preloading all assets (images or sound)
+* > AssetManager will handle preloading all assets (json, spritesheet images, or sound)
+* > This version is tailored to work with the JSON (and spritesheet png) produced by CreateJS ZOE
 *
 * var manifest = [
-*   {src:"lib/Snake.png",
-    id:"Snake",
-    data:{
-*       images:["lib/Snake.png"],
-        frames:[
-*            [0, 0, 128, 128, 0, -2, 1],
-*            [128, 0, 128, 128, 0, -2, 1],
-*            [256, 0, 128, 128, 0, -2, 1],
-*            [384, 0, 128, 128, 0, -2, 1],
-*            [512, 0, 128, 128, 0, -2, 1],
-*            [640, 0, 128, 128, 0, -2, 1],
-*            [768, 0, 128, 128, 0, -2, 1],
-*            [0, 128, 128, 128, 0, -2, 1],
-*            [128, 128, 128, 128, 0, -2, 1],
-*            [256, 128, 128, 128, 0, -2, 1],
-*            [384, 128, 128, 128, 0, -2, 1],
-*            [512, 128, 128, 128, 0, -2, 1],
-*            [640, 128, 128, 128, 0, -2, 1],
-*            [768, 128, 128, 128, 0, -2, 1],
-*            [0, 256, 128, 128, 0, -2, 1],
-*            [128, 256, 128, 128, 0, -2, 1],
-*            [256, 256, 128, 128, 0, -2, 1],
-*            [384, 256, 128, 128, 0, -2, 1],
-*            [512, 256, 128, 128, 0, -2, 1]
-*        ],
-*        animations:{
-*            alive: {frames: [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2], speed: 1},
-*            dead: {frames: [3,4,5,6,7,8,9,10,11,12,12,12,12,12,12,12,12,12,12,12,12,12,13,14,15,16,17,18],speed: 1}
-*        }
-*    }}
-*];
-* > this data was generated from a SWF with CreateJS ZOE but allows different sized frames to be included in one spritesheet
-* > ultimately this approach allows you to use one Spritesheet for a large number of different sprites
-* > note that when using zoe all your sprite animations need to be on the main timeline with frame labels
-* > you also want to include an empty movieclip with instance name "registrationPoint" to mark where reg point is located
+*     {
+*         src:"lib/gameAssets.json",
+*         spritesheet:"GameAssets"
+*     },
+*     {
+*         src:"lib/gameAssets.png",
+*         id:"GameAssets"
+*     },
 *
-* > to get a sprite at anytime call getSprite(id) and provide id of sprite you want to retrieve and it returns the sprite for usage
+*     {
+*         src:"lib/genericAssets.json",
+*         spritesheet:"GenericAssets"
+*     },
+*     {
+*         src:"lib/genericAssets.png",
+*         id:"GenericAssets"
+*     },
+*
+*     {
+*         src:"sounds/boing.ogg",
+*         id:"boing",
+*         data:4
+*     }
+* ];
+*
+* > IMPORTANT NOTE : the ZOE json file must be loaded BEFORE its partnered spritesheet image and linked together via the spritesheet property (see example above)
+* > supports multiple spritesheets (as demoed above) but will not handler a single spritesheet spread over several images (not tested)
+* > for using ZOE:
+* > generate all animations for single spritesheet on main timeline in Flash with frame labels
+* > you also want to include an empty movieclip with instance name "registrationPoint" to mark where reg point is located
+* > the JSON file produced outlines the frame sizes and animation sequences of the spritesheet
+*
+* > to get a sprite at anytime call getSprite(id) to receive sprite object based off spritesheet - will need to gotoAndStop() to desired frame
+* > or call getSprite(id, framelabel) to jump to correct frame (stopped)
+*
+* > sounds are listed in manifest as ogg format but you include mp3 (and possibly wav)
+* > use soundsJS to access preloaded sounds in code
+*
+* > getProgress() returns the progress of the loading of all assets in manifest as a decimal number (progress=1 means everything loaded)
 */
 
 var AssetManager = function() {
@@ -66,7 +73,7 @@ var AssetManager = function() {
 	// ------------------------------------------------------ event handlers
     function onLoaded(e) {
 
-        console.log("asset loaded: " + e.item.src + " type: " + e.item.type);
+        updateLoadingConsole("asset loaded: " + e.item.src + " type: " + e.item.type);
 
         // what type of asset was loaded?
         switch(e.item.type) {
