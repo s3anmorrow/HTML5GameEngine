@@ -51,8 +51,7 @@
 var AssetManager = function() {
     // keep track of assets
     var manifest = null;
-    var counter = -1;
-    var total = -1;
+    var progress = 0;
     // array of spritesheet objects
     var spriteSheets = [];
     // array of JSON for each spritesheet
@@ -79,6 +78,7 @@ var AssetManager = function() {
                 var image = e.result;
                 // get data object from JSON array (previously loaded)
                 var data = spriteSheetsJSON[id];
+                if (data === undefined) console.log("ASSETMANAGER ERROR > JSON not defined for spritesheet - Check manifest [JSON must be listed before spritesheet image]");
                 // add images property to data object and tack on loaded spritesheet image from LoadQueue
                 // this is so that the SpriteSheet constructor doesn't preload the image again
                 // it will do this if you feed it the string path of the spritesheet
@@ -88,31 +88,37 @@ var AssetManager = function() {
                 // store spritesheet object for later retrieval
                 spriteSheets[id] = spriteSheet;
                 break;
+
             case createjs.LoadQueue.JSON:
                 // get spritesheet this JSON object belongs to and store for spritesheet construction later
                 var spriteSheetID = e.item.spritesheet;
                 spriteSheetsJSON[spriteSheetID] = e.result;
+                break;
+
             case createjs.LoadQueue.SOUND:
                 // sound loaded
                 break;
         }
 
-        // keeping track of how many loaded?
-        counter++;
         // an asset has been loaded
         stage.dispatchEvent(eventAssetLoaded);
     }
 
-    //called if there is an error loading the spriteSheet (usually due to a 404)
+    function onProgress(e) {
+        progress = e.progress;
+    }
+
+    // called if there is an error loading the spriteSheet (usually due to a 404)
     function onError(e) {
-        console.log("Preloader > Error Loading asset");
+        console.log("ASSETMANAGER ERROR > Error Loading asset");
     }
 
     function onComplete(e) {
         console.log("All assets loaded");
-
+        spriteSheetsJSON = null;
         // kill event listeners
         preloader.removeEventListener("fileload", onLoaded);
+        preloader.removeEventListener("progress", onProgress);
         preloader.removeEventListener("error", onError);
         preloader.removeEventListener("complete", onComplete);
         // dispatch event that all assets are loaded
@@ -120,18 +126,19 @@ var AssetManager = function() {
     }
 
 	// ------------------------------------------------------ public methods
-    this.getSprite = function(id) {
+    this.getSprite = function(spriteSheetID, frameLabel) {
         // construct sprite object to animate the frames (I call this a clip)
-        var sprite = new createjs.Sprite(spriteSheets[id]);
-        sprite.name = id;
+        var sprite = new createjs.Sprite(spriteSheets[spriteSheetID]);
+        sprite.name = spriteSheetID;
         sprite.x = 0;
         sprite.y = 0;
         sprite.currentFrame = 0;
+        if (frameLabel != undefined) sprite.gotoAndStop(frameLabel);
         return sprite;
     };
 
     this.getProgress = function() {
-        return (counter/total);
+        return progress;
     };
 
 	this.getSpriteSheet = function(id) {
@@ -141,13 +148,12 @@ var AssetManager = function() {
     this.loadAssets = function(myManifest) {
         // setup manifest
         manifest = myManifest;
-        counter = 0;
-        total = manifest.length;
         // if browser doesn't suppot the ogg it will attempt to look for an mp3
         createjs.Sound.alternateExtensions = ["mp3","wav"];
         // registers the PreloadJS object with SoundJS - will automatically have access to all sound assets
         preloader.installPlugin(createjs.Sound);
         preloader.addEventListener("fileload", onLoaded);
+        preloader.addEventListener("progress", onProgress);
         preloader.addEventListener("error", onError);
         preloader.addEventListener("complete", onComplete);
         preloader.setMaxConnections(5);

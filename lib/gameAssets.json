@@ -1,6 +1,6 @@
 {
 "framerate":24,
-"images":["gameAssets.png"],
+"images":["gameAssets.png","Deerfire_high_res.png"],
 "frames":[
     [1064, 606, 70, 16, 0, -3, -3],
     [993, 606, 67, 21, 0, 0, 0],

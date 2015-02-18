@@ -4,9 +4,9 @@ var GameSettings = {
     // the framerate of the game - speeds or slows down the whole game
     "frameRate":30,
     // the speed of the player
-    "playerSpeed":4,
+    "playerSpeed":6,
     // the speed of the bullets
-    "bulletSpeed":6,
+    "bulletSpeed":8,
     // the number of bullets allowed to be shot at one time at the start of the game
     "bulletMaxAtStart":3,
     // the maximum number of bullets allowed to be shot at one time EVER in the game
@@ -14,11 +14,11 @@ var GameSettings = {
     // the number of hitPoints the player starts with - hitPoints are taken away when a enemy gets away OR when the player touches an enemy
     "hitPoints":3,
     // the number of kills required to gain back a hitPoint
-    "killsPerHitPoint":2,
+    "killsPerHitPoint":5,
     // how many seconds between adding enemies to the game at the start?
     "enemyFrequency":3,
     // the number of kills required to level up
-    "killsPerLevel":5,
+    "killsPerLevel":8,
     // hit points bar color
     "hitPointsBarColor":"#FFCC33",
 

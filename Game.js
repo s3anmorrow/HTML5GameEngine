@@ -63,6 +63,9 @@ function fireKey() {
 }
 
 function monitorCollisions() {
+    // only monitor if player is alive
+    if (!player.getAlive()) return;
+
     // get local references to pools and lengths
     var bulletPool = objectPool.bulletPool;
     var enemyPool = objectPool.enemyPool;
@@ -87,9 +90,6 @@ function monitorCollisions() {
             }
         }
     }
-
-    // only monitor if player is alive
-    if (!player.getAlive()) return;
 
     // check collisions between enemies and player
     for (n=0; n<enemyPoolLength; n++) {
@@ -138,6 +138,7 @@ function onInit() {
     assetManager.loadAssets(manifest);
 }
 
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 function onProgress(e) {
     console.log("progress: " + assetManager.getProgress());
 }

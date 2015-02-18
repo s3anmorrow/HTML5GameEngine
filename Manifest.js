@@ -7,6 +7,7 @@ var manifest = [
         src:"lib/gameAssets.png",
         id:"GameAssets"
     },
+
     {
         src:"lib/genericAssets.json",
         spritesheet:"GenericAssets"
@@ -15,11 +16,6 @@ var manifest = [
         src:"lib/genericAssets.png",
         id:"GenericAssets"
     },
-
-
-
-
-
 
     {
         src:"sounds/boing.ogg",
