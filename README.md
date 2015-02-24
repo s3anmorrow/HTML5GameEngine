@@ -5,7 +5,7 @@ Requirements are:
 - entire game engine deployed in a folder on desktop
 - Adobe Flash CC opened to gameAssets.fla (htdocs/lib) with playback head on “playerMoving” blank keyframe
 - ZOE Installed (Adobe AIR App) and running
-- run miniWeb server (may require permissions)
+- run miniWeb server (may require permissions) (http://miniweb.sourceforge.net/)
 - using the IP URL provided by miniWeb hit game.htm in chrome
 - save a bookmark to this page on the desktop where the student can easily find it
 - shut down chrome to avoid distraction during workshop but keep miniWeb running
