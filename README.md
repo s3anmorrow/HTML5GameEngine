@@ -9,6 +9,7 @@ Requirements are:
 - using the IP URL provided by miniWeb hit game.htm in chrome
 - save a bookmark to this page on the desktop where the student can easily find it
 - shut down chrome to avoid distraction during workshop but keep miniWeb running
+- minweb is required because the game engine must run through a server due to asset preloading. You cannot run it by double clicking on game.htm and running locally in the browser.
 
 The game engine was implemented using the CreateJS framework.<br/><br/>
 See lessonResources folder for complete lesson plan and setup instructions.<br/><br/>
