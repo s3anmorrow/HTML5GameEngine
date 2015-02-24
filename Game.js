@@ -150,7 +150,6 @@ function onInit() {
     assetManager.loadAssets(manifest);
 }
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 function onProgress(e) {
     updateLoadingConsole("progress: " + Math.ceil(assetManager.getProgress() * 100) + "%");
 }
@@ -169,12 +168,12 @@ function onReady(e) {
 
     // construct screen objects
     gameScreen = assetManager.getSprite("GameAssets");
-    gameScreen.gotoAndStop("gameScreen");
+    gameScreen.gotoAndStop("screenInGame");
     overScreen = assetManager.getSprite("GameAssets");
-    overScreen.gotoAndStop("overScreen");
+    overScreen.gotoAndStop("screenGameOver");
     overScreen.addEventListener("click", onResetGame);
     introScreen = assetManager.getSprite("GameAssets");
-    introScreen.gotoAndStop("introScreen");
+    introScreen.gotoAndStop("screenStart");
     introScreen.addEventListener("click", onStartGame);
     stage.addChild(introScreen);
 
@@ -196,6 +195,7 @@ function onReady(e) {
     createjs.Ticker.addEventListener("tick", onTick);
 
     updateLoadingConsole(">> game ready");
+    stage.removeChild(txtLoading);
 }
 
 function onStartGame(e) {

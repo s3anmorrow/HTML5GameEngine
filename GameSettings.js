@@ -12,15 +12,17 @@ var GameSettings = {
     // the maximum number of bullets allowed to be shot at one time EVER in the game
     "bulletMaxForGame":8,
     // the number of hitPoints the player starts with - hitPoints are taken away when a enemy gets away OR when the player touches an enemy
-    "hitPoints":3,
+    "hitPoints":5,
     // the number of kills required to gain back a hitPoint
-    "killsPerHitPoint":5,
+    "killsPerHitPoint":8,
     // how many seconds between adding enemies to the game at the start?
     "enemyFrequency":3,
     // the number of kills required to level up
     "killsPerLevel":8,
     // hit points bar color
     "hitPointsBarColor":"#FFCC33",
+    // is there an idle animation for the player?
+    "idleAnimation":true,
 
     // sound effects
     "SoundEnemyKilled":"whonk",

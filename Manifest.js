@@ -23,23 +23,33 @@ var manifest = [
         data:4
     },
     {
-        src:"sounds/whonk.ogg",
-        id:"whonk",
-        data:4
-    },
-    {
-        src:"sounds/shoot.ogg",
-        id:"shoot",
-        data:4
-    },
-    {
         src:"sounds/comeon.ogg",
         id:"comeon",
         data:4
     },
     {
-        src:"sounds/metalShard.ogg",
-        id:"metalShard",
+        src:"sounds/crazyLaugh.ogg",
+        id:"crazyLaugh",
+        data:4
+    },
+    {
+        src:"sounds/dullBeep.ogg",
+        id:"dullBeep",
+        data:4
+    },
+    {
+        src:"sounds/energize.ogg",
+        id:"energize",
+        data:4
+    },
+    {
+        src:"sounds/gunFire.ogg",
+        id:"gunFire",
+        data:4
+    },
+    {
+        src:"sounds/machineGun.ogg",
+        id:"machineGun",
         data:4
     },
     {
@@ -48,8 +58,64 @@ var manifest = [
         data:4
     },
     {
-        src:"sounds/powerUp.ogg",
-        id:"powerUp",
+        src:"sounds/musicDance.ogg",
+        id:"musicDance",
+        data:4
+    },
+    {
+        src:"sounds/musicDrumBeat.ogg",
+        id:"musicDrumBeat",
+        data:4
+    },
+    {
+        src:"sounds/musicMarching.ogg",
+        id:"musicMarching",
+        data:4
+    },
+    {
+        src:"sounds/musicMetalic.ogg",
+        id:"musicMetallic",
+        data:4
+    },
+	{
+        src:"sounds/ping.ogg",
+        id:"ping",
+        data:4
+    },
+	{
+        src:"sounds/polish.ogg",
+        id:"polish",
+        data:4
+    },
+	{
+        src:"sounds/powerup.ogg",
+        id:"powerup",
+        data:4
+    },
+	{
+        src:"sounds/shoot.ogg",
+        id:"shoot",
+        data:4
+    },
+	{
+        src:"sounds/whistle.ogg",
+        id:"whistle",
+        data:4
+    },
+	{
+        src:"sounds/whonk.ogg",
+        id:"whonk",
+        data:4
+    },
+	{
+        src:"sounds/yeah.ogg",
+        id:"yeah",
+        data:4
+    },
+	{
+        src:"sounds/zip.ogg",
+        id:"zip",
         data:4
     }
+
 ];

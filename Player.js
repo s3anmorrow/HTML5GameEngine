@@ -18,7 +18,7 @@ var Player = function(){
     // get sprite and setup
     var sprite = assetManager.getSprite("GameAssets");
     sprite.scaleX = 1;
-    sprite.gotoAndStop("playerAlive");
+    sprite.gotoAndStop("playerMoving");
     sprite.regX = sprite.getBounds().width / 2;
     sprite.regY = sprite.getBounds().height / 2;
 
@@ -47,7 +47,8 @@ var Player = function(){
     this.startMe = function() {
         alive = true;
         sprite.scaleX = 1;
-        sprite.gotoAndStop("playerAlive");
+        sprite.gotoAndStop("playerMoving");
+        if (GameSettings.idleAnimation) sprite.gotoAndPlay("playerIdle");
         hitPoints = GameSettings.hitPoints;
         sprite.x = 300;
         sprite.y = 500;
@@ -55,18 +56,24 @@ var Player = function(){
     };
 
     this.stopMe = function() {
+        if (moving === MovingDirection.STOPPED) return;
         sprite.stop();
+        if (GameSettings.idleAnimation) sprite.gotoAndPlay("playerIdle");
         moving = MovingDirection.STOPPED;
         //stage.removeChild(sprite);
     };
 
     this.moveLeft = function() {
+        if (moving === MovingDirection.LEFT) return;
         sprite.play();
+        if (GameSettings.idleAnimation) sprite.gotoAndPlay("playerMoving");
         moving = MovingDirection.LEFT;
     };
 
     this.moveRight = function() {
+        if (moving === MovingDirection.RIGHT) return;
         sprite.play();
+        if (GameSettings.idleAnimation) sprite.gotoAndPlay("playerMoving");
         moving = MovingDirection.RIGHT;
     };
 
@@ -76,6 +83,9 @@ var Player = function(){
             sprite.dispatchEvent(eventPlayerHit);
             if (hitPoints <= 0) {
                 this.killMe();
+            } else {
+                // player not killed - nudge player up a bit in shock
+                sprite.y = sprite.y - 10;
             }
         }
     };
@@ -111,13 +121,11 @@ var Player = function(){
                 if (sprite.x > stageRightBound) {
                     sprite.x = stageRightBound;
                 }
-            } else {
+            }
 
-                // ?????????????????????????????
-                // set animation to idle sequence
-                // TODO add hurt animation to player
-
-
+            // bump player back down again (if nudged up)
+            if (sprite.y < 500) {
+                sprite.y = sprite.y + 5;
             }
         }
     };
