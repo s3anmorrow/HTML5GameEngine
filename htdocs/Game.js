@@ -310,7 +310,7 @@ function onGameEvent(e) {
             if (killCount % GameSettings.killsPerLevel === 0) {
                 // increase enemy drop frequency
                 enemyDropFreq -= 0.25;
-                if (enemyDropFreq < 0.5) enemyDropFreq = 0.5;
+                if (enemyDropFreq < 0.25) enemyDropFreq = 0.25;
                 window.clearInterval(enemyTimer);
                 enemyTimer = window.setInterval(onDropEnemy, enemyDropFreq * 1000);
                 // increase bullet max with level

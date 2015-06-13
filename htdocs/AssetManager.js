@@ -163,7 +163,7 @@ var AssetManager = function() {
         preloader.addEventListener("progress", onProgress);
         preloader.addEventListener("error", onError);
         preloader.addEventListener("complete", onComplete);
-        preloader.setMaxConnections(5);
+        preloader.setMaxConnections(1);
         // load first spritesheet to start preloading process
         preloader.loadManifest(manifest);
     };
